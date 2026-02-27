@@ -2,13 +2,18 @@
  mock data generation and stats calculation
  */
 
-import type { BaseSlot, SlotOccupancy, ParkingSlotData } from "../types/slot.types";
-import type { Zone } from "../types/zone.types";
-import type { ZoneAvailabilityResponse } from "../types/api.types";
-import { SLOT_TYPE_MAP } from "../types/slot.types";
+import { 
+  BaseSlot, SlotOccupancy, SlotType, ParkingSlotData, 
+  Zone, ZoneAvailabilityResponse } from "../types.ts";
 
 export const TOTAL_ZONES = 100;
 export const SLOTS_PER_ZONE = 100;
+
+export const SLOT_TYPE_MAP: Record<number, SlotType> = {
+  0: "standard",
+  1: "EV",
+  2: "handicapped",
+};
 
 // Random car plate generator
 const KR_MID_CHARS = [

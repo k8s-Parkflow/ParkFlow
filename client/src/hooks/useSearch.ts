@@ -3,40 +3,71 @@
  */
 
 import { useState, useCallback } from "react";
-import type { ParkingSlotData } from "../types/slot.types";
+import type { ParkingSlotData } from "../types.ts";
+
+const PLATE_REGEX = /^\d{2,3}[가-힣]\s?\d{4}$/;
+export type SearchError = "invalid_format" | "not_found" | null;
 
 const HIGHLIGHT_DURATION_MS = 5_000;
 
-interface UseSearchReturn {
+export interface UseSearchReturn {
   searchQuery: string;
   setSearchQuery: (q: string) => void;
+  isValidPlate: boolean;           // live format check!
+  searchError: SearchError;
   highlightedSlotId: string;
   handleSearch: (allSlots: ParkingSlotData[], onFound: (zoneId: number) => void) => void;
 }
 
+function normalisePlate(p: string): string {
+  return p.trim().replace(/\s+/g, " ");
+}
+
 export function useSearch(): UseSearchReturn {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQueryBase] = useState("");
+  const [searchError, setSearchError] = useState<SearchError>(null);
   const [highlightedSlotId, setHighlightedSlotId] = useState("");
+  
+  const isValidPlate = PLATE_REGEX.test(searchQuery.trim());
+  
+  const setSearchQuery = useCallback((q: string) => {
+    setSearchQueryBase(q);
+    setSearchError(null);
+    setHighlightedSlotId("");
+  }, []);
 
   const handleSearch = useCallback(
     (allSlots: ParkingSlotData[], onFound: (zoneId: number) => void) => {
+  
       const q = searchQuery.trim();
-      if (!q) return;
 
-      const found = allSlots.find((s) =>
-        s.licensePlate?.toLowerCase().includes(q.toLowerCase())
+      if (!PLATE_REGEX.test(q)) {
+        setSearchError("invalid_format");
+        return;
+      }
+
+      const normQ = normalisePlate(searchQuery);
+      const found = allSlots.find(
+        (s) => s.licensePlate && normalisePlate(s.licensePlate) === normQ
       );
 
-      if (found) {
-        onFound(found.zoneId);
-        setHighlightedSlotId(found.slotCode);
-        setTimeout(() => setHighlightedSlotId(""), HIGHLIGHT_DURATION_MS);
-      } else {
-        alert("그런 차 없삼");
+      if (!found) {
+        setSearchError("not_found");
+        return;
       }
+
+      setSearchError(null);
+      onFound(found.zoneId);
+      setHighlightedSlotId(found.slotCode);
     },
     [searchQuery]
   );
 
-  return { searchQuery, setSearchQuery, highlightedSlotId, handleSearch };
+  // const clearSearch = useCallback(() => {
+  //   setSearchQueryBase("");
+  //   setSearchError(null);
+  //   setHighlightedSlotId("");
+  // }, []);
+
+  return { searchQuery, setSearchQuery, isValidPlate, searchError, highlightedSlotId, handleSearch };
 }

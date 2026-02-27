@@ -13,9 +13,8 @@ import {
   type GlobalStats,
 } from "../utils/parkingUtils";
 
-import type { Zone } from "../types/zone.types";
-import type { ParkingSlotData } from "../types/slot.types";
-import type { ZoneAvailabilityResponse } from "../types/api.types";
+import type { Zone } from "../types.ts";
+import type { ParkingSlotData, ZoneAvailabilityResponse } from "../types.ts";
 
 const REFRESH_INTERVAL_MS = 5_000;
 const EVENTS_PER_TICK = () => Math.floor(Math.random() * 4) + 2;

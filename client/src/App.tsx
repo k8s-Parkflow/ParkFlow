@@ -23,11 +23,10 @@ export default function App() {
     setSelectedZoneId,
   } = getParkingData();
 
-  const { searchQuery, setSearchQuery, highlightedSlotId, handleSearch } = useSearch();
+  const { searchQuery, setSearchQuery, isValidPlate, searchError, highlightedSlotId, handleSearch } = useSearch();
   const { zoomLevel, zoomIn, zoomOut, zoomReset } = useZoom();
   
   const selectedZone = zones.find((z) => z.zone_id === selectedZoneId);
-  const runSearch = () => handleSearch(allSlots, setSelectedZoneId);
 
   return (
     <div className="app">
@@ -63,8 +62,10 @@ export default function App() {
         <StatDisplay
           globalStats={globalStats}
           searchQuery={searchQuery}
+          isValidPlate={isValidPlate}
+          searchError={searchError}
           onSearchChange={setSearchQuery}
-          onSearch={runSearch}
+          onSearch={()=> handleSearch(allSlots, setSelectedZoneId)}
         />
 
         {/* Zone Selector */}

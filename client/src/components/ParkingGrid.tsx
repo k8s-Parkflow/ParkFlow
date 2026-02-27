@@ -1,5 +1,5 @@
 import { ParkingSlot } from "./ParkingSlot";
-import { ParkingSlotData } from "../types/slot.types";
+import { ParkingSlotData } from "../types.ts";
 import "../styles/ParkingGrid.css";
 
 const AISLES_COUNT = 5;

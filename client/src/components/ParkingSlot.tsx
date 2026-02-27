@@ -1,5 +1,5 @@
 import { Car, Zap, Accessibility } from "lucide-react";
-import type { SlotType, ParkingSlotData } from "../types/slot.types";
+import type { SlotType } from "../types.ts";
 import "../styles/ParkingSlot.css";
 
 interface ParkingSlotProps {

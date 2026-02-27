@@ -1,19 +1,17 @@
 import { ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
 import { ParkingGrid } from "./ParkingGrid";
-import type { Zone } from "../types/zone.types";
-import type { ParkingSlotData } from "../types/slot.types";
-import type { ZoneAvailabilityResponse } from "../types/api.types";
+import type { Zone, ZoneAvailabilityResponse, ParkingSlotData } from "../types.ts";
 import "../styles/ParkingZoneDisplay.css";
 
 interface ParkingZoneDisplayProps {
-  zone:              Zone;
-  zoneStats:         ZoneAvailabilityResponse;
-  zoneSlots:         ParkingSlotData[];
+  zone: Zone;
+  zoneStats: ZoneAvailabilityResponse;
+  zoneSlots: ParkingSlotData[];
   highlightedSlotId: string;
-  zoomLevel:         number;
-  onZoomIn:          () => void;
-  onZoomOut:         () => void;
-  onZoomReset:       () => void;
+  zoomLevel: number;
+  onZoomIn: () => void;
+  onZoomOut: () => void;
+  onZoomReset: () => void;
 }
 
 const MIN_ZOOM = 0.5;

@@ -48,3 +48,17 @@
 }
 
 .btn-search:hover { background-color: var(--c-yellow-dark); }
+
+.search-hint {
+  min-height: 1rem;
+  line-height: 1;
+  margin-top: 4px;
+}
+
+.search-hint--error {
+  margin: 4px 0 0;
+  font-size: 0.7rem;
+  color: var(--c-text-dim, #9ca3af);
+  color: #f87171;
+}
+
