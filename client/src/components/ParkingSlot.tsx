@@ -44,7 +44,7 @@ function SlotIcon({isActive, orientation, isHighlighted}: {
 
   const iconClass = [
     "parking-slot__car-icon",
-    orientation === "left" ? "parking-slot__car-icon--flipped" : "",
+    orientation === "right" ? "parking-slot__car-icon--flipped" : "",
     isHighlighted ? "parking-slot__car-icon--highlighted" : "",
   ].filter(Boolean).join(" ");
 
@@ -58,7 +58,7 @@ export function ParkingSlot({
   slotType = "standard",
   licensePlate,
   isHighlighted = false,
-  orientation = "right",
+  orientation = "left",
 }: ParkingSlotProps) {
 
   const containerClass = getSlotClassNames(isActive, slotType, isHighlighted);
