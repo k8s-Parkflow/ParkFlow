@@ -1,0 +1,36 @@
+.parking-grid__scaler {
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.parking-grid {
+  /* position: relative; */
+  display: flex;
+  flex-direction: row;
+  gap: var(--aisle-gap);
+  width: var(--grid-w);      
+  /* background-color: #262626; 
+  border-radius: 0.75rem;     
+  transition: transform 0.3s ease-in-out; */
+  padding: 1.5rem;
+}
+
+.parking-grid__aisle {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.parking-grid__column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem; 
+  width: var(--slot-w);
+}
+
+.parking-grid__lane {
+  width: var(--lane-w);           
+  background-color: #404040; 
+  border-radius: 0.25rem;
+}

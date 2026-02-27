@@ -1,0 +1,39 @@
+{
+  "parking_slots": [
+    {
+      "id": 1,
+      "slot_code": "A01",
+      "zone_id": 1,
+      "is_active": false,
+      "slot_type": 0
+    },
+    {
+      "id": 2,
+      "slot_code": "A02",
+      "zone_id": 1,
+      "is_active": true,
+      "slot_type": 2
+    },
+    {
+      "id": 3,
+      "slot_code": "B01",
+      "zone_id": 2,
+      "is_active": false,
+      "slot_type": 0
+    },
+    {
+      "id": 4,
+      "slot_code": "C01",
+      "zone_id": 3,
+      "is_active": true,
+      "slot_type": 0
+    },
+    {
+      "id": 5,
+      "slot_code": "C02",
+      "zone_id": 3,
+      "is_active": false,
+      "slot_type": 1
+    }
+  ]
+}
