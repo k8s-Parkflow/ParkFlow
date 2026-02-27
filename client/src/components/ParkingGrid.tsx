@@ -1,12 +1,11 @@
-import { ParkingSlot, ParkingSlotData } from "./ParkingSlot";
-import { Zap, Accessibility } from 'lucide-react';
+import { ParkingSlot } from "./ParkingSlot";
+import { ParkingSlotData } from "../types/slot.types";
 import "../styles/ParkingGrid.css";
 
 const AISLES_COUNT = 5;
 const SLOTS_PER_AISLE = 20;
 const SLOTS_PER_SIDE = SLOTS_PER_AISLE / 2;
 
-// Types
 interface ParkingGridProps {
   slots: ParkingSlotData[]; 
   highlightedSlotId?: string;
@@ -17,6 +16,9 @@ interface AisleProps {
   aisleSlots: ParkingSlotData[];
   highlightedSlotId?: string;
 }
+
+//aisle: 1-2 columns of parking spaces
+//lane: 주행도로 / 빈 공간
 
 function groupIntoAisles(slots: ParkingSlotData[]): ParkingSlotData[][] {
   return Array.from({ length: AISLES_COUNT }, (_, i) => 
@@ -39,6 +41,7 @@ function SlotColumn({ slots, orientation, highlightedSlotId,
           zone={String(slot.zoneId)}
           slotType={slot.slotType}
           licensePlate={slot.licensePlate}
+          orientation={orientation}
           isHighlighted={slot.slotCode === highlightedSlotId}/>
       ))}
     </div>
@@ -62,13 +65,23 @@ export function ParkingGrid({ slots, highlightedSlotId, zoomLevel }: ParkingGrid
   const aisles = groupIntoAisles(slots);
 
   return (
-    <div
-      className="parking-grid"
-      style={{ transform: `scale(${zoomLevel})`, transformOrigin: "top left" }}
-    >
-      {aisles.map((aisleSlots, i) => (
-        <Aisle key={i} aisleSlots={aisleSlots} highlightedSlotId={highlightedSlotId} />
-      ))}
+    <div className="parking-grid__scaler">
+      <div
+        style={{
+          width:  `calc(var(--grid-w)  * ${zoomLevel})`,
+          height: `calc(var(--grid-h * ${zoomLevel})`,
+          position: "relative",
+        }}
+      >
+        <div
+          className="parking-grid"
+          style={{ transform: `scale(${zoomLevel})`, transformOrigin: "top left"}}
+        >
+          {aisles.map((aisleSlots, i) => (
+            <Aisle key={i} aisleSlots={aisleSlots} highlightedSlotId={highlightedSlotId} />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

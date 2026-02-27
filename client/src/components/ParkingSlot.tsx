@@ -1,34 +1,6 @@
 import { Car, Zap, Accessibility } from "lucide-react";
+import type { SlotType, ParkingSlotData } from "../types/slot.types";
 import "../styles/ParkingSlot.css";
-
-// Types 
-export type SlotType = "standard" | "EV" | "handicapped";
-
-export interface ParkingSlotData {
-  slotId: number;
-  slotCode: string;
-  zoneId: number;
-  slotType: SlotType;
-  isActive: boolean;
-  licensePlate?: string;
-}
-
-// DB Mapping 
-
-export const SLOT_TYPE_MAP: Record<number, SlotType> = {
-  0: "standard",
-  1: "EV",
-  2: "handicapped",
-};
-
-export const fetchDbData = (data: any[]): ParkingSlotData[] =>
-  data.map((slot) => ({
-    slotId: slot.id,
-    slotCode: slot.slot_code,
-    zoneId: slot.zone_id,
-    slotType: SLOT_TYPE_MAP[slot.slot_type] ?? "standard",
-    isActive: slot.is_active,
-  }));
 
 interface ParkingSlotProps {
   slotNumber: string;
@@ -40,27 +12,15 @@ interface ParkingSlotProps {
   orientation?: "left" | "right";
 }
 
-function getSlotClassNames(
-  isActive: boolean,
-  slotType: SlotType,
-  isHighlighted: boolean
-): string {
+function getSlotClassNames( isActive: boolean, slotType: SlotType, isHighlighted: boolean ): string {
   const classes = ["parking-slot"];
-
   if (slotType === "handicapped") classes.push("parking-slot--handicapped");
   if (slotType === "EV") classes.push("parking-slot--ev");
-
-  if (isHighlighted) {
-    classes.push("parking-slot--highlighted");
-  } else if (isActive) {
-    classes.push("parking-slot--occupied");
-  } else {
-    classes.push("parking-slot--available");
-  }
-
+  if (isHighlighted) classes.push("parking-slot--highlighted");
+  else if (isActive) classes.push("parking-slot--occupied");
+  else classes.push("parking-slot--available");
   return classes.join(" ");
 }
-
 
 function SlotBadge({ slotType }: { slotType: SlotType }) {
   if (slotType === "standard") return null;
@@ -86,9 +46,7 @@ function SlotIcon({isActive, orientation, isHighlighted}: {
     "parking-slot__car-icon",
     orientation === "left" ? "parking-slot__car-icon--flipped" : "",
     isHighlighted ? "parking-slot__car-icon--highlighted" : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
+  ].filter(Boolean).join(" ");
 
   return <Car className={iconClass} size={36} />;
 }
@@ -102,6 +60,7 @@ export function ParkingSlot({
   isHighlighted = false,
   orientation = "right",
 }: ParkingSlotProps) {
+
   const containerClass = getSlotClassNames(isActive, slotType, isHighlighted);
   const statusLabel = isActive ? "occupied" : "available";
   return (
