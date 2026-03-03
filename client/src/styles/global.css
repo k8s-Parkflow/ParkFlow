@@ -1,12 +1,12 @@
 :root {
   /* color palette */
-  --c-yellow:       #fbbf24;
-  --c-yellow-dark:  #f59e0b;
-  --c-yellow-hover: #d97706;
+  --c-yellow:       #ebcc02;
+  --c-yellow-dark:  #d2a100;
+  --c-yellow-hover: #ffa600ad;
   --c-yellow-text:  #171717;
-  --c-yellow-glow: rgb(245 158 11 / 0.6);
-  --c-yellow-muted: rgb(245 158 11 / 0.4);
-  --c-yellow-bg: rgb(245 158 11 / 0.1);
+  --c-yellow-glow: rgba(255, 217, 0, 0.6);
+  --c-yellow-muted: rgb(255 217 0 / 0.4);
+  --c-yellow-bg: rgb(255 217 0 / 0.1);
 
   /* Neutrals */
   --c-bg:       #171717; 
@@ -135,7 +135,7 @@ input  { font-family: inherit; }
   border-radius: 0.5rem;
   font-size: 0.875rem;
   font-weight: 600;
-  border: 1px solid transparent;
+  border: 0px solid transparent;
   transition: background 0.15s, border-color 0.15s;
 }
 
