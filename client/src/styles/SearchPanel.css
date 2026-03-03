@@ -63,7 +63,7 @@
 
 .search-hint--error {
   margin: 4px 0 0;
-  font-size: 0.7rem;
+  font-size: 0.875rem;
   color: var(--c-text-dim, #9ca3af);
   color: #f87171;
 }
