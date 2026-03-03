@@ -8,8 +8,6 @@ import type { ParkingSlotData } from "../types.ts";
 const PLATE_REGEX = /^\d{2,3}[가-힣]\s?\d{4}$/;
 export type SearchError = "invalid_format" | "not_found" | null;
 
-const HIGHLIGHT_DURATION_MS = 5_000;
-
 export interface UseSearchReturn {
   searchQuery: string;
   setSearchQuery: (q: string) => void;
@@ -38,10 +36,8 @@ export function useSearch(): UseSearchReturn {
 
   const handleSearch = useCallback(
     (allSlots: ParkingSlotData[], onFound: (zoneId: number) => void) => {
-  
-      const q = searchQuery.trim();
 
-      if (!PLATE_REGEX.test(q)) {
+      if (!isValidPlate) {
         setSearchError("invalid_format");
         return;
       }

@@ -23,7 +23,7 @@
   padding: 0.5rem 0.75rem 0.5rem 2.25rem;
   background-color: var(--c-bg);
   border: 1px solid var(--c-border);
-  border-radius: var(--radius-md);
+  border-radius: 0.75rem;
   color: var(--c-text);
   font-size: 0.875rem;
   transition: border-color 0.15s;
@@ -32,22 +32,28 @@
 .search-input::placeholder { color: var(--c-muted); }
 .search-input:focus {
   outline: none;
-  border-color: var(--c-yellow);
+  border-color: var(--c-yellow-glow);
+  box-shadow: 0 10px 15px -3px var(--c-yellow-bg),
+              0 4px 6px -4px var(--c-yellow-bg);
 }
 
 .btn-search {
   padding: 0.5rem 1rem;
-  background-color: var(--c-yellow);
+  background: linear-gradient(to right, var(--c-yellow), var(--c-yellow-dark));
   color: var(--c-yellow-text);
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: 0.75rem;
   font-size: 0.875rem;
   font-weight: 700;
   white-space: nowrap;
-  transition: background 0.15s;
+  box-shadow: 0 10px 15px -3px var(--c-yellow-bg),
+              0 4px 6px -4px var(--c-yellow-bg);
+  transition: background 0.2s, box-shadow 0.2s;
 }
 
-.btn-search:hover { background-color: var(--c-yellow-dark); }
+.btn-search:hover { 
+  background: linear-gradient(to right, var(--c-yellow-dark), var(--c-yellow-hover));
+}
 
 .search-hint {
   min-height: 1rem;
@@ -57,7 +63,7 @@
 
 .search-hint--error {
   margin: 4px 0 0;
-  font-size: 0.7rem;
+  font-size: 0.875rem;
   color: var(--c-text-dim, #9ca3af);
   color: #f87171;
 }

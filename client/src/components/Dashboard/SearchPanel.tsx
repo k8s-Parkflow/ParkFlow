@@ -16,7 +16,6 @@ const ERROR_MESSAGES: Record<NonNullable<SearchError>, string> = {
 }
 
 export function SearchPanel({ query, isValidPlate, searchError, onChange, onSearch }: SearchPanelProps) {
-  const showHint = query.length > 0 && !isValidPlate && !searchError;
   const showError = !!searchError;
 
   return (

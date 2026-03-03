@@ -1,8 +1,7 @@
 
 .parking-slot {
   position: relative;
-  border: 2px solid transparent;
-  border-radius: var(--slot-r, 4rem);
+  border-radius: var(--slot-r);
   width: var(--slot-w, 6rem);
   height: var(--slot-h, 0.5rem);
 
@@ -16,39 +15,47 @@
 }
 
 .parking-slot--highlighted {
-  background-color: var(--c-yellow);
-  border-color: var(--c-yellow-dark);
+  background: linear-gradient(135deg, var(--c-yellow), var(--c-yellow-dark));
+  border-color: var(--c-yellow);
   box-shadow: 0 0 16px 4px var(--c-yellow-glow);
   animation: pulse 1.5s ease-in-out infinite;
 }
 
 .parking-slot--occupied {
-  background-color: var(--c-bg);
+  background: linear-gradient(to bottom right, var(--c-bg), var(--c-surface) 40%);
   border-color: var(--c-border);
 }
 
 .parking-slot--available {
+  background-color: var(--c-shadow);
+  border: 2px solid transparent;
   border-color: var(--c-yellow-muted);
+  transition: border-color 0.2s, background 0.2s;
 }
 
 .parking-slot--available:hover {
-  background-color: var(--c-yellow-glow);
+  background-color: var(--c-yellow-bg);
+  border-color: var(--c-yellow);
 }
 
+/* available handicapped slots */
 .parking-slot--handicapped.parking-slot--available {
-  border-color: var(--c-blue);
+  border-color: var(--c-blue-glow);
 }
 
 .parking-slot--handicapped.parking-slot--available:hover {
-  background-color: var(--c-blue-glow);
+  background-color: var(--c-blue-bg);
+  border-color: var(--c-blue);
 }
 
+/* available ev slots */
 .parking-slot--ev.parking-slot--available {
-  border-color: var(--c-purple);
+  border-color: var(--c-purple-glow);
 }
 
 .parking-slot--ev.parking-slot--available:hover {
-  background-color: var(--c-purple-glow);
+  background-color: var(--c-purple-bg);
+  border-color: var(--c-purple);
 }
 
 .parking-slot__number {
@@ -62,7 +69,7 @@
 }
 
 .parking-slot__plate {
-  font-size: 7px;
+  font-size: 9px;
   font-family: monospace;
   color: var(--c-yellow);
   opacity: 0.6;

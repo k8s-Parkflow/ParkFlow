@@ -1,6 +1,4 @@
-/*
- mock data generation and stats calculation
- */
+//generate mock data and calculate stats
 
 import { 
   BaseSlot, SlotOccupancy, SlotType, ParkingSlotData, 
@@ -24,9 +22,9 @@ const KR_MID_CHARS = [
 ];
 
 export function generateKPlate(): string {
-  const num1 = String(Math.floor(Math.random() * 89) + 11);
+  const num1 = String(Math.floor(Math.random() * 800)).padStart(2, '0');
   const mid  = KR_MID_CHARS[Math.floor(Math.random() * KR_MID_CHARS.length)];
-  const num2 = String(Math.floor(Math.random() * 9000) + 1000);
+  const num2 = String(Math.floor(Math.random() * 9000) + 1000)
   return `${num1}${mid} ${num2}`;
 }
 
