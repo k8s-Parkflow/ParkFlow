@@ -107,16 +107,16 @@
 }
 
 .wave-fill {
-  position:   absolute;
-  inset:      0;
+  position: absolute;
+  inset: 0;
   transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
 }
 
 .wave-fill__crest {
   display: block;
-  width:   100%;
-  height:  30px;
+  width: 100%;
+  height: 30px;
   margin-top: -30px;
   margin-bottom: -1px;
   animation: wave-drift 4s ease-in-out infinite;
@@ -129,9 +129,9 @@
 }
 
 .wave-fill__body {
-  width:      100%;
-  height:     300px;
-  background: linear-gradient(to bottom, var(--c-yellow), var(--c-yellow-dark) 30%);
+  width: 100%;
+  height: 300px;
+  background: linear-gradient(to bottom, var(--c-yellow), var(--c-yellow-dark) 25%);
 }
 
 @keyframes wave-drift {

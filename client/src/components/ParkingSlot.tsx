@@ -74,7 +74,7 @@ export function ParkingSlot({
       <span className="parking-slot__number">{slotNumber}</span>
       {licensePlate && isActive && (
         <span className="parking-slot__plate">
-          {licensePlate.substring(0, 7)}
+          {licensePlate}
         </span>
       )}
     </div>
