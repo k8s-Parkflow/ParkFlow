@@ -55,7 +55,9 @@ function Aisle({ aisleSlots, highlightedSlotId }: AisleProps) {
   return (
     <div className="parking-grid__aisle">
       <SlotColumn slots={topRow} orientation="left" highlightedSlotId={highlightedSlotId} />
-      <div className="parking-grid__lane" aria-hidden="true" />
+      <div className="parking-grid__lane" aria-hidden="true">
+        <div className="parking-grid__lane--right" aria-hidden="true" />
+      </div>
       <SlotColumn slots={bottomRow} orientation="right" highlightedSlotId={highlightedSlotId} />
     </div>
   );
@@ -69,8 +71,9 @@ export function ParkingGrid({ slots, highlightedSlotId, zoomLevel }: ParkingGrid
       <div
         style={{
           width:  `calc(var(--grid-w)  * ${zoomLevel})`,
-          height: `calc(var(--grid-h * ${zoomLevel})`,
+          height: `calc(var(--grid-h) * ${zoomLevel})`,
           position: "relative",
+          transition: "width 0.2s ease, height 0.2s ease",
         }}
       >
         <div

@@ -1,15 +1,17 @@
 :root {
   /* color palette */
-  --c-yellow:       #facc15;
-  --c-yellow-dark:  #eab308;
-  --c-yellow-hover: #ca8a04;
+  --c-yellow:       #fbbf24;
+  --c-yellow-dark:  #f59e0b;
+  --c-yellow-hover: #d97706;
   --c-yellow-text:  #171717;
-  --c-yellow-glow: rgba(250, 204, 21, 0.5);
-  --c-yellow-muted: rgba(250, 204, 21, 0.8);
+  --c-yellow-glow: rgb(245 158 11 / 0.6);
+  --c-yellow-muted: rgb(245 158 11 / 0.4);
+  --c-yellow-bg: rgb(245 158 11 / 0.1);
 
   /* Neutrals */
   --c-bg:       #171717; 
   --c-surface:  #262626; 
+  --c-shadow: rgb(10 10 10 / 0.5); 
   --c-border:   #404040; 
   --c-muted:    #737373;
   --c-subtle:   #525252;
@@ -17,25 +19,18 @@
   --c-text-dim: #a3a3a3; 
 
   /* Accent */
-  --c-blue:        #3b82f6;
-  --c-blue-glow:   rgba(59, 130, 246, 0.5);
-  --c-blue-bg:     rgba(59, 130, 246, 0.15);
-  --c-purple:      #a855f7;
-  --c-purple-glow: rgba(168, 85, 247, 0.5);
-  --c-purple-bg:   rgba(168, 85, 247, 0.15);
-
-  /* Layout */
-  --max-width: 88rem;
-  --radius-sm: 0.375rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
+  --c-blue:        #60a5fa; 
+  --c-blue-glow:   rgb(59 130 246 / 0.6);
+  --c-blue-bg:     rgb(59 130 246 / 0.1);
+  --c-purple:      #c084fc;
+  --c-purple-glow: rgb(168 85 247 / 0.6);
+  --c-purple-bg:   rgb(168 85 247 / 0.1);
 
   /* Elements */
   --slot-w:  6rem;   
   --slot-h: 4rem;   
-  --slot-r: 0.5rem; 
-  --lane-w: 48px;
+  --slot-r: 0.75rem; 
+  --lane-w: 80px;
   --aisle-w: calc(var(--slot-w) * 2 + var(--lane-w));
   --aisle-gap: 16px;
   --slots-in-col-cnt: 10;
@@ -98,10 +93,10 @@ input  { font-family: inherit; }
 }
 
 .app__brand-icon {
-  background-color: var(--c-yellow);
+  background: linear-gradient(to bottom right, var(--c-yellow), var(--c-yellow-dark));
   color: var(--c-yellow-text);
   padding: 0.75rem;
-  border-radius: var(--radius-xl);
+  border-radius: 0.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -137,7 +132,7 @@ input  { font-family: inherit; }
   align-items: center;
   gap: 0.4rem;
   padding: 0.4rem 0.9rem;
-  border-radius: var(--radius-md);
+  border-radius: 0.5rem;
   font-size: 0.875rem;
   font-weight: 600;
   border: 1px solid transparent;
@@ -145,11 +140,15 @@ input  { font-family: inherit; }
 }
 
 .btn-live--active {
-  background-color: var(--c-yellow);
+  background: linear-gradient(to right, var(--c-yellow), var(--c-yellow-dark));
+  box-shadow: 0 10px 15px -3px var(--c-yellow-bg),
+            0 4px 6px -4px var(--c-yellow-bg);
   color: var(--c-yellow-text);
 }
 
-.btn-live--active:hover { background-color: var(--c-yellow-dark); }
+.btn-live--active:hover { 
+  background: linear-gradient(to right, var(--c-yellow-dark), var(--c-yellow-hover)); 
+}
 
 .btn-live--paused {
   background-color: transparent;

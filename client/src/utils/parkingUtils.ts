@@ -1,6 +1,4 @@
-/*
- mock data generation and stats calculation
- */
+//generate mock data and calculate stats
 
 import { 
   BaseSlot, SlotOccupancy, SlotType, ParkingSlotData, 

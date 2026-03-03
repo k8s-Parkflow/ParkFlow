@@ -1,7 +1,7 @@
 .zone-selector {
   background-color: var(--c-surface);
   border: 1px solid var(--c-border);
-  border-radius: var(--radius-xl);
+  border-radius: 1rem;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
@@ -12,7 +12,6 @@
   .zone-selector {
     flex-direction: row;
     align-items: center;
-    /*justify-content: space-between;*/
   }
 }
 
@@ -31,7 +30,7 @@
 .btn-zone {
   min-width: 72px;
   padding: 0.4rem 0.75rem;
-  border-radius: var(--radius-md);
+  border-radius: 0.75rem;
   font-size: 0.875rem;
   font-weight: 600;
   border: 1px solid var(--c-border);
@@ -72,7 +71,7 @@
   text-align: center;
   background-color: var(--c-bg);
   border: 1px solid var(--c-border);
-  border-radius: var(--radius-md);
+  border-radius: 0.75rem;
   color: var(--c-text);
   font-size: 0.875rem;
   font-weight: 700;
@@ -80,7 +79,9 @@
 
 .zone-input:focus {
   outline: none;
-  border-color: var(--c-yellow);
+  border-color: var(--c-yellow-glow);
+  box-shadow: 0 10px 15px -3px var(--c-yellow-bg),
+              0 4px 6px -4px var(--c-yellow-bg);
 }
 
 .zone-input::-webkit-inner-spin-button,
