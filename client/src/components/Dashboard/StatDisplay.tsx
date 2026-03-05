@@ -1,7 +1,7 @@
 import { CheckCircle, Zap, Accessibility } from "lucide-react";
 import { StatPanel }   from "./StatPanel";
 import { SearchPanel } from "./SearchPanel";
-import type { GlobalStats } from "../../utils/parkingUtils";
+import type { GlobalStats } from "../../types";
 import type { SearchError } from "../../hooks/useSearch";
 import "../../styles/StatDisplay.css";
 

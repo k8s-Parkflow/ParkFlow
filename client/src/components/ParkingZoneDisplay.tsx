@@ -1,12 +1,12 @@
 import { ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
 import { ParkingGrid } from "./ParkingGrid";
-import type { Zone, ZoneAvailabilityResponse, ParkingSlotData } from "../types.ts";
+import type { Zone, ZoneAvailabilityResponse, Slot, ZoneTypeTotals } from "../types.ts";
 import "../styles/ParkingZoneDisplay.css";
 
 interface ParkingZoneDisplayProps {
   zone: Zone;
-  zoneStats: ZoneAvailabilityResponse;
-  zoneSlots: ParkingSlotData[];
+  zoneStats: ZoneAvailabilityResponse | null;
+  zoneTotals: ZoneTypeTotals | null;
   highlightedSlotId: string;
   zoomLevel: number;
   onZoomIn: () => void;
@@ -20,7 +20,7 @@ const MAX_ZOOM = 2.0;
 export function ParkingZoneDisplay({
   zone,
   zoneStats,
-  zoneSlots,
+  zoneTotals,
   highlightedSlotId,
   zoomLevel,
   onZoomIn,
@@ -31,15 +31,17 @@ export function ParkingZoneDisplay({
     <section className="zone-display">
       <div className="zone-display__header">
         <div className="zone-display__group">
-          <span className="zone-badge">{zone.zone_id}</span>
+          <span className="zone-badge">{zone.zoneId}</span>
           <div>
-            <h2 className="zone-display__title">{zone.zone_name}</h2>
-            <p className="zone-display__sub">
-              {zoneStats.available_slots} 여유 / {zoneStats.total_slots} 전체
-              &nbsp;·&nbsp; 일반 {zoneStats.general_available}/{zoneStats.general_total}
-              &nbsp;·&nbsp; EV {zoneStats.ev_available}/{zoneStats.ev_total}
-              &nbsp;·&nbsp; 장애인 {zoneStats.disabled_available}/{zoneStats.disabled_total}
-            </p>
+            <h2 className="zone-display__title">{zone.zoneName}</h2>
+            {zoneStats &&
+              <p className="zone-display__sub">
+                {zoneStats.availableSlots} 여유 / {zoneStats.totalSlots} 전체
+                &nbsp;·&nbsp; 일반 {zoneStats.generalAvailable}{zoneTotals && `/${zoneTotals.generalTotal}`}
+                &nbsp;·&nbsp; EV {zoneStats.evAvailable}{zoneTotals && `/${zoneTotals.evTotal}`}
+                &nbsp;·&nbsp; 장애인 {zoneStats.disabledAvailable}{zoneTotals && `/${zoneTotals.disabledTotal}`}
+              </p>
+            }
           </div>
         </div>
 
@@ -64,7 +66,7 @@ export function ParkingZoneDisplay({
         style={{ height: `calc(var(--grid-natural-height) * ${zoomLevel})` }}
       >
         <ParkingGrid
-          slots={zoneSlots}
+          slots={[]}
           highlightedSlotId={highlightedSlotId}
           zoomLevel={zoomLevel}
         />

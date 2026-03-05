@@ -1,56 +1,96 @@
-export interface Zone {
-  zone_id: number;
-  zone_name: string;
-}
-
-//Parking slot default
-export interface BaseSlot {
-  slot_id: number;
-  zone_id: number;
-  slot_type_id: number;
-  slot_code: string;
-  is_active: boolean;
-}
-
-export interface SlotOccupancy {
-  slot_id: number;
-  occupied: boolean;
-  vehicle_plate?: string;
-}
-
-// Updated Slot interface used throughout the front
-export type SlotType = "standard" | "EV" | "handicapped";
-
-export interface ParkingSlotData {
-  slotId: number;
-  slotCode: string;
-  zoneId: number;
-  slotType: SlotType;
-  isActive: boolean;
-  licensePlate?: string;
-}
+// Backend API Response
+// Endpoint: GET /zones/availability
+// GET /zones/{zoneId}/availability
 
 export interface ZoneAvailabilityResponse {
-  zone_id: number;
-  total_slots: number;
-  occupied_slots: number;
-  available_slots: number;
-  general_total: number;
-  general_occupied: number;
-  general_available: number;
-  ev_total: number;
-  ev_occupied: number;
-  ev_available: number;
-  disabled_total: number;
-  disabled_occupied: number;
-  disabled_available: number;
+  zoneId: number;
+  zoneName: string;
+  totalSlots: number;
+  occupiedSlots: number;
+  availableSlots: number;
+  generalAvailable: number;
+  evAvailable: number;
+  disabledAvailable: number;
 }
 
+//GET /zones/{zoneID}/availability/general
+//GET /zones/{zoneID}/availability/ev
+//GET /zones/{zoneID}/availability/disabled
 export interface TypeAvailabilityResponse {
-  zone_id: number;
-  type: string;
+  zoneId: number;
+  category: SlotType;
   total: number;
   occupied: number;
   available: number;
 }
 
+//uses snake_case instead of camelCase
+export interface CurrentParkingLocationResponse {
+  zone_id: string;
+  slot_name: string;
+}
+
+export interface ApiEnvelope<T> {
+  isSuccess: boolean;
+  code:      string;
+  message:   string;
+  data:      T;
+}
+
+
+//Derived Typesssss
+
+//type totals for each zone
+//fetched once and not re-fetched
+export interface ZoneTypeTotals {
+  generalTotal:  number;
+  evTotal:       number;
+  disabledTotal: number;
+}
+
+export interface GlobalStats {
+  //derived from ZoneTypeTotals
+  totalSlots:        number;
+  generalTotal:      number;
+  evTotal:           number;
+  disabledTotal:     number;
+
+  totalOccupied:     number;
+  totalAvailable:    number;
+  generalAvailable:  number;
+  evAvailable:       number;
+  disabledAvailable: number;
+}
+
+export interface Zone {
+  zoneId: number;
+  zoneName: string;
+}
+
+// //Parking slot default
+// export interface BaseSlot {
+//   slotId: number;
+//   zoneId: number;
+//   slotTypeId: number;
+//   slotCode: string;
+//   isActive: boolean;
+// }
+
+// export interface SlotOccupancy {
+//   slotId: number;
+//   occupied: boolean;
+//   vehiclePlate?: string;
+// }
+
+export type SlotType = "GENERAL" | "EV" | "DISABLED";
+
+export type SlotCategoryPath = "general" | "ev" | "disabled";
+
+export interface Slot {
+  slotId: number;
+  zoneId: number;
+  slotCode: string;
+  category: SlotType;
+  isActive: boolean;
+  vehiclePlate?: string;
+}

@@ -1,7 +1,7 @@
 import { ParkingSquare, Activity } from 'lucide-react';
 import './styles/global.css';
 
-import { getParkingData } from './hooks/getParkingData';
+import { getParkingData } from './hooks/sampleGetParkingData';
 import { useSearch } from "./hooks/useSearch";
 import { useZoom } from "./hooks/useZoom";
 
@@ -9,24 +9,28 @@ import { StatDisplay } from './components/Dashboard/StatDisplay';
 import { ZoneSelector } from "./components/Dashboard/ZoneSelector";
 import { ParkingZoneDisplay } from "./components/ParkingZoneDisplay";
 
+import type { Zone } from './types';
+
 export default function App() {
   const {
     zones,
-    allSlots,
-    zoneSlots,
+    allZoneStats,
     zoneStats,
+    zoneTotals,
     globalStats,
     lastUpdated,
     autoRefresh,
     toggleAutoRefresh,
     selectedZoneId,
     setSelectedZoneId,
+    isLoading,
+    error,
   } = getParkingData();
 
   const { searchQuery, setSearchQuery, isValidPlate, searchError, highlightedSlotId, handleSearch } = useSearch();
   const { zoomLevel, zoomIn, zoomOut, zoomReset } = useZoom();
   
-  const selectedZone = zones.find((z) => z.zone_id === selectedZoneId);
+  const selectedZone = zones.find((z: Zone) => z.zoneId === selectedZoneId);
 
   return (
     <div className="app">
@@ -65,7 +69,7 @@ export default function App() {
           isValidPlate={isValidPlate}
           searchError={searchError}
           onSearchChange={setSearchQuery}
-          onSearch={()=> handleSearch(allSlots, setSelectedZoneId)}
+          onSearch={()=> handleSearch(allZoneStats, setSelectedZoneId)}
         />
 
         {/* Zone Selector */}
@@ -79,7 +83,7 @@ export default function App() {
           <ParkingZoneDisplay
             zone={selectedZone}
             zoneStats={zoneStats}
-            zoneSlots={zoneSlots}
+            zoneTotals={zoneTotals}
             highlightedSlotId={highlightedSlotId}
             zoomLevel={zoomLevel}
             onZoomIn={zoomIn}
