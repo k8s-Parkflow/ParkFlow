@@ -1,7 +1,7 @@
 import { ParkingSquare, Activity } from 'lucide-react';
 import './styles/global.css';
 
-import { getParkingData } from './hooks/sampleGetParkingData';
+import { getParkingData } from './hooks/getParkingData';
 import { useSearch } from "./hooks/useSearch";
 import { useZoom } from "./hooks/useZoom";
 
