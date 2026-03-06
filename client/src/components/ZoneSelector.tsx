@@ -1,5 +1,5 @@
-import "../../styles/ZoneSelector.css";
-import { TOTAL_ZONES } from "../../utils/parkingUtils";
+import "../styles/ZoneSelector.css";
+import { TOTAL_ZONES } from "../utils/parkingUtils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface ZoneSelectorProps {
@@ -18,10 +18,6 @@ export function ZoneSelector({ selectedZoneId, onZoneChange }: ZoneSelectorProps
 
   return (
     <section className="zone-selector">
-      <div className="zone-selector__header">
-        <h3 className="zone-selector__title">구역 선택</h3>
-        <span className="zone-selector__or">(1–{TOTAL_ZONES}):</span>
-      </div>
       <div className="zone-selector__nav">
         <button 
           className="zone-selector__navbtn"

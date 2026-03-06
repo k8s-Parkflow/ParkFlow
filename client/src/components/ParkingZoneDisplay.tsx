@@ -1,9 +1,12 @@
 import { ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
 import { ParkingGrid } from "./ParkingGrid";
 import type { Zone, ZoneAvailabilityResponse, ParkingSlotData } from "../types.ts";
+import { ZoneSelector } from "./ZoneSelector.tsx";
 import "../styles/ParkingZoneDisplay.css";
 
 interface ParkingZoneDisplayProps {
+  selectedZoneId: number;
+  onZoneChange: (id: number) => void;
   zone: Zone;
   zoneStats: ZoneAvailabilityResponse;
   zoneSlots: ParkingSlotData[];
@@ -18,6 +21,8 @@ const MIN_ZOOM = 0.5;
 const MAX_ZOOM = 2.0;
 
 export function ParkingZoneDisplay({
+  selectedZoneId,
+  onZoneChange,
   zone,
   zoneStats,
   zoneSlots,
@@ -44,7 +49,7 @@ export function ParkingZoneDisplay({
         </div>
 
         <div className="zone-display__controls">
-          <div className="zoom-controls">
+          <div className="zone-display__zoom">
             <button className="zoom-btn" onClick={onZoomOut}  disabled={zoomLevel <= MIN_ZOOM} aria-label="축소">
               <ZoomOut size={16} />
             </button>
@@ -56,7 +61,13 @@ export function ParkingZoneDisplay({
             </button>
             <span className="zoom-label">{Math.round(zoomLevel * 100)}%</span>
           </div>
+
+          <ZoneSelector
+            selectedZoneId={selectedZoneId}
+            onZoneChange={onZoneChange}
+          />
         </div>
+        
       </div>
 
       <div
