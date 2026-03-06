@@ -39,7 +39,7 @@ function SlotColumn({ slots, orientation, highlightedSlotId,
           slotNumber={slot.slotCode}
           isActive={slot.isActive}
           zone={String(slot.zoneId)}
-          slotType={slot.category}
+          category={slot.category}
           licensePlate={slot.vehiclePlate}
           orientation={orientation}
           isHighlighted={slot.slotCode === highlightedSlotId}/>

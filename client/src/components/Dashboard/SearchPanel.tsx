@@ -4,7 +4,6 @@ import "../../styles/SearchPanel.css";
 
 interface SearchPanelProps {
   query: string;
-  isValidPlate: boolean;
   searchError: SearchError;
   onChange: (q: string) => void;
   onSearch: () => void;
@@ -13,9 +12,10 @@ interface SearchPanelProps {
 const ERROR_MESSAGES: Record<NonNullable<SearchError>, string> = {
   invalid_format: "예) 12가 3456 또는 123가 4567",
   not_found: "그런 차 없삼",
+  server_error: "서버 문제 ㅠㅠ",
 }
 
-export function SearchPanel({ query, isValidPlate, searchError, onChange, onSearch }: SearchPanelProps) {
+export function SearchPanel({ query, searchError, onChange, onSearch }: SearchPanelProps) {
   const showError = !!searchError;
 
   return (

@@ -8,13 +8,12 @@ import "../../styles/StatDisplay.css";
 interface StatDisplayProps {
   globalStats:   GlobalStats;
   searchQuery:   string;
-  isValidPlate: boolean,
   searchError: SearchError;
   onSearchChange:(q: string) => void;
   onSearch:      () => void;
 }
 
-export function StatDisplay({ globalStats, searchQuery, isValidPlate, searchError, onSearchChange, onSearch }: StatDisplayProps) {
+export function StatDisplay({ globalStats, searchQuery, searchError, onSearchChange, onSearch }: StatDisplayProps) {
   const { generalAvailable, generalTotal, disabledAvailable, disabledTotal, evAvailable, evTotal } = globalStats;
 
   return (
@@ -52,7 +51,6 @@ export function StatDisplay({ globalStats, searchQuery, isValidPlate, searchErro
 
       <SearchPanel
         query={searchQuery}
-        isValidPlate={isValidPlate}
         searchError={searchError}
         onChange={onSearchChange}
         onSearch={onSearch}

@@ -12,7 +12,7 @@ import type {
   ZoneAvailabilityResponse,
   TypeAvailabilityResponse,
   CurrentParkingLocationResponse,
-  SlotType,
+  SlotCategory,
   SlotCategoryPath,
 } from "../types";
 
@@ -62,7 +62,7 @@ export async function fetchZoneAvailableCount(zoneId: number): Promise<number> {
 }
 
 // GET /zones/availability/type/{type}/count
-export async function fetchTotalAvailableByType(type: SlotType): Promise<number> {
+export async function fetchTotalAvailableByType(type: SlotCategory): Promise<number> {
   return apiFetch<number>(`/zones/availability/type/${type}/count`);
 }
 

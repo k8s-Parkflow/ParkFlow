@@ -1,34 +1,34 @@
 import { Car, Zap, Accessibility } from "lucide-react";
-import type { SlotType } from "../types.ts";
+import type { SlotCategory } from "../types.ts";
 import "../styles/ParkingSlot.css";
 
 interface ParkingSlotProps {
   slotNumber: string;
   isActive: boolean;
   zone: string;
-  slotType?: SlotType;
+  category?: SlotCategory;
   licensePlate?: string;
   isHighlighted?: boolean;
   orientation?: "left" | "right";
 }
 
-function getSlotClassNames( isActive: boolean, slotType: SlotType, isHighlighted: boolean ): string {
+function getSlotClassNames( isActive: boolean, category: SlotCategory, isHighlighted: boolean ): string {
   const classes = ["parking-slot"];
-  if (slotType === "handicapped") classes.push("parking-slot--handicapped");
-  if (slotType === "EV") classes.push("parking-slot--ev");
+  if (category === "DISABLED") classes.push("parking-slot--handicapped");
+  if (category === "EV") classes.push("parking-slot--ev");
   if (isHighlighted) classes.push("parking-slot--highlighted");
   else if (isActive) classes.push("parking-slot--occupied");
   else classes.push("parking-slot--available");
   return classes.join(" ");
 }
 
-function SlotBadge({ slotType }: { slotType: SlotType }) {
-  if (slotType === "standard") return null;
+function SlotBadge({ category }: { category: SlotCategory }) {
+  if (category === "GENERAL") return null;
 
   return (
     <div className="parking-slot__badge">
-      {slotType === "EV" && <Zap className="parking-slot__badge-icon parking-slot__badge-icon--ev" size={12} />}
-      {slotType === "handicapped" && (
+      {category === "EV" && <Zap className="parking-slot__badge-icon parking-slot__badge-icon--ev" size={12} />}
+      {category === "DISABLED" && (
         <Accessibility className="parking-slot__badge-icon parking-slot__badge-icon--handicapped" size={12} />
       )}
     </div>
@@ -55,17 +55,17 @@ export function ParkingSlot({
   slotNumber,
   isActive,
   zone,
-  slotType = "standard",
+  category = "GENERAL",
   licensePlate,
   isHighlighted = false,
   orientation = "left",
 }: ParkingSlotProps) {
 
-  const containerClass = getSlotClassNames(isActive, slotType, isHighlighted);
+  const containerClass = getSlotClassNames(isActive, category, isHighlighted);
   const statusLabel = isActive ? "occupied" : "available";
   return (
     <div className={containerClass} aria-label={`Slot ${slotNumber}, Zone ${zone}, ${statusLabel}`}>
-      <SlotBadge slotType={slotType} />
+      <SlotBadge category={category} />
       <SlotIcon
         isActive={isActive}
         orientation={orientation}

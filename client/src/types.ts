@@ -18,7 +18,7 @@ export interface ZoneAvailabilityResponse {
 //GET /zones/{zoneID}/availability/disabled
 export interface TypeAvailabilityResponse {
   zoneId: number;
-  category: SlotType;
+  category: SlotCategory;
   total: number;
   occupied: number;
   available: number;
@@ -82,7 +82,7 @@ export interface Zone {
 //   vehiclePlate?: string;
 // }
 
-export type SlotType = "GENERAL" | "EV" | "DISABLED";
+export type SlotCategory = "GENERAL" | "EV" | "DISABLED";
 
 export type SlotCategoryPath = "general" | "ev" | "disabled";
 
@@ -90,7 +90,7 @@ export interface Slot {
   slotId: number;
   zoneId: number;
   slotCode: string;
-  category: SlotType;
+  category: SlotCategory;
   isActive: boolean;
   vehiclePlate?: string;
 }

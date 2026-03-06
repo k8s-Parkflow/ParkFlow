@@ -14,7 +14,7 @@
  */
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-
+import { TOTAL_ZONES } from "../App.tsx";
 import {
   fetchAllZonesAvailability,
   fetchZoneTypeAvailability,
@@ -29,7 +29,20 @@ import type {
 
 const REFRESH_INTERVAL_MS = 5_000;
 const REFERENCE_ZONE_ID      = 1;   // representative zone — totals identical across all
-const TOTAL_ZONES = 100;
+
+interface GetParkingDataReturn {
+  zones:             Zone[];
+  zoneStats:         ZoneAvailabilityResponse | null;
+  zoneTotals:        ZoneTypeTotals | null;
+  globalStats:       GlobalStats;
+  lastUpdated:       Date;
+  autoRefresh:       boolean;
+  toggleAutoRefresh: () => void;
+  selectedZoneId:    number;
+  setSelectedZoneId: (id: number) => void;
+  isLoading:         boolean;
+  error:             string | null;
+}
 
 // ─── Global stats calculator ──────────────────────────────────────────────────
 
@@ -66,23 +79,6 @@ const EMPTY_GLOBAL_STATS: GlobalStats = {
   totalAvailable: 0, totalOccupied: 0,
   generalAvailable: 0, evAvailable: 0, disabledAvailable: 0,
 };
-
-// ─── Return type (same shape as the original hook) ────────────────────────────
-
-interface GetParkingDataReturn {
-  zones:             Zone[];
-  allZoneStats:      ZoneAvailabilityResponse[];
-  zoneStats:         ZoneAvailabilityResponse | null;
-  zoneTotals:        ZoneTypeTotals | null;
-  globalStats:       GlobalStats;
-  lastUpdated:       Date;
-  autoRefresh:       boolean;
-  toggleAutoRefresh: () => void;
-  selectedZoneId:    number;
-  setSelectedZoneId: (id: number) => void;
-  isLoading:         boolean;
-  error:             string | null;
-}
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
@@ -169,7 +165,6 @@ export function getParkingData(): GetParkingDataReturn {
 
   return {
     zones,
-    allZoneStats,
     zoneStats,
     zoneTotals,
     globalStats,

@@ -1,5 +1,5 @@
 import "../styles/ZoneSelector.css";
-import { TOTAL_ZONES } from "../utils/parkingUtils";
+import { TOTAL_ZONES } from "../App.tsx";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface ZoneSelectorProps {

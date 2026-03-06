@@ -8,12 +8,12 @@ import { useZoom } from "./hooks/useZoom";
 import { StatDisplay } from './components/Dashboard/StatDisplay';
 import { ParkingZoneDisplay } from "./components/ParkingZoneDisplay";
 
-import type { Zone } from './types';
+export const TOTAL_ZONES   = 100;
+export const SLOTS_PER_ZONE = 100;
 
 export default function App() {
   const {
     zones,
-    allZoneStats,
     zoneStats,
     zoneTotals,
     globalStats,
@@ -26,10 +26,10 @@ export default function App() {
     error,
   } = getParkingData();
 
-  const { searchQuery, setSearchQuery, isValidPlate, searchError, highlightedSlotId, handleSearch } = useSearch();
+  const { searchQuery, setSearchQuery, searchError, highlightedSlotId, handleSearch } = useSearch();
   const { zoomLevel, zoomIn, zoomOut, zoomReset } = useZoom();
   
-  const selectedZone = zones.find((z: Zone) => z.zoneId === selectedZoneId);
+  const selectedZone = zones.find((z) => z.zoneId === selectedZoneId);
 
   return (
     <div className="app">
@@ -65,10 +65,9 @@ export default function App() {
         <StatDisplay
           globalStats={globalStats}
           searchQuery={searchQuery}
-          isValidPlate={isValidPlate}
           searchError={searchError}
           onSearchChange={setSearchQuery}
-          onSearch={()=> handleSearch(allZoneStats, setSelectedZoneId)}
+          onSearch={()=> handleSearch(setSelectedZoneId)}
         />
 
         {/* Parking Zone Grid Display */}
