@@ -1,20 +1,20 @@
 import { ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
-import { ParkingGrid } from "./ParkingGrid";
-import type { Zone, ZoneAvailabilityResponse, ParkingSlotData } from "../types.ts";
+import { ParkingGrid }  from "./ParkingGrid";
 import { ZoneSelector } from "./ZoneSelector.tsx";
+import type { Zone, ZoneAvailabilityResponse, ParkingSlotData } from "../types.ts";
 import "../styles/ParkingZoneDisplay.css";
 
 interface ParkingZoneDisplayProps {
   selectedZoneId: number;
-  onZoneChange: (id: number) => void;
-  zone: Zone;
-  zoneStats: ZoneAvailabilityResponse;
-  zoneSlots: ParkingSlotData[];
+  onZoneChange:   (id: number) => void;
+  zone:              Zone;
+  zoneStats:         ZoneAvailabilityResponse;
+  zoneSlots:         ParkingSlotData[];
   highlightedSlotId: string;
-  zoomLevel: number;
-  onZoomIn: () => void;
-  onZoomOut: () => void;
-  onZoomReset: () => void;
+  zoomLevel:         number;
+  onZoomIn:          () => void;
+  onZoomOut:         () => void;
+  onZoomReset:       () => void;
 }
 
 const MIN_ZOOM = 0.5;
@@ -50,13 +50,13 @@ export function ParkingZoneDisplay({
 
         <div className="zone-display__controls">
           <div className="zone-display__zoom">
-            <button className="zoom-btn" onClick={onZoomOut}  disabled={zoomLevel <= MIN_ZOOM} aria-label="축소">
+            <button className="zoom-btn" onClick={onZoomOut}   disabled={zoomLevel <= MIN_ZOOM} aria-label="축소">
               <ZoomOut size={16} />
             </button>
             <button className="zoom-btn" onClick={onZoomReset} aria-label="원래 크기">
               <Maximize2 size={16} />
             </button>
-            <button className="zoom-btn" onClick={onZoomIn}   disabled={zoomLevel >= MAX_ZOOM} aria-label="확대">
+            <button className="zoom-btn" onClick={onZoomIn}    disabled={zoomLevel >= MAX_ZOOM} aria-label="확대">
               <ZoomIn size={16} />
             </button>
             <span className="zoom-label">{Math.round(zoomLevel * 100)}%</span>
@@ -67,13 +67,11 @@ export function ParkingZoneDisplay({
             onZoneChange={onZoneChange}
           />
         </div>
-        
       </div>
 
-      <div
-        className="zone-display__grid"
-        style={{ height: `calc(var(--grid-natural-height) * ${zoomLevel})` }}
-      >
+      {/* No inline height — the scaler inside ParkingGrid sets the true
+          content height and the CSS scroll container handles overflow. */}
+      <div className="zone-display__grid">
         <ParkingGrid
           slots={zoneSlots}
           highlightedSlotId={highlightedSlotId}
