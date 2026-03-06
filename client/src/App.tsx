@@ -6,7 +6,6 @@ import { useSearch } from "./hooks/useSearch";
 import { useZoom } from "./hooks/useZoom";
 
 import { StatDisplay } from './components/Dashboard/StatDisplay';
-import { ZoneSelector } from "./components/Dashboard/ZoneSelector";
 import { ParkingZoneDisplay } from "./components/ParkingZoneDisplay";
 
 import type { Zone } from './types';
@@ -72,15 +71,11 @@ export default function App() {
           onSearch={()=> handleSearch(allZoneStats, setSelectedZoneId)}
         />
 
-        {/* Zone Selector */}
-        <ZoneSelector
-          selectedZoneId={selectedZoneId}
-          onZoneChange={setSelectedZoneId}
-        />
-
         {/* Parking Zone Grid Display */}
         {selectedZone && (
           <ParkingZoneDisplay
+            selectedZoneId={selectedZoneId}
+            onZoneChange={setSelectedZoneId}
             zone={selectedZone}
             zoneStats={zoneStats}
             zoneTotals={zoneTotals}
