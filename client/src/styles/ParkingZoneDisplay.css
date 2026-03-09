@@ -3,6 +3,7 @@
   border: 1px solid var(--c-border);
   border-radius: 1rem;
   overflow: hidden;
+  
 }
 
 .zone-display__header {
@@ -51,6 +52,7 @@
   border: none;
 }
 
+/* Zoom in & out buttons */
 .zone-display__zoom {
   display: flex;
   flex-direction: row;
@@ -87,19 +89,11 @@
   padding: 0.25rem;
 }
 
+
 .zone-display__grid {
-  /* Scrollable in both axes so zoomed content is fully reachable. */
+  /* padding: 1.5rem; */
+  width: 100%;
+  max-height: 100vh;
   overflow: auto;
-
-  /* Padding gives breathing room around the scaled grid and — critically —
-     ensures the left edge is never flush against the container wall when
-     zoomed in, preventing the left-cutoff bug. */
-  padding: 1.5rem;
-
-  /* Height is set inline (natural height × zoomLevel) by ParkingZoneDisplay.
-     max-height caps it so the page doesn't grow taller than the viewport. */
-  max-height: 80vh;
-
-  /* Remove position: relative — it was causing the overflow clipping to be
-     calculated from the wrong stacking context, clipping the aisle backgrounds. */
+  position: relative;
 }
