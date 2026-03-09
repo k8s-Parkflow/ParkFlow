@@ -6,10 +6,11 @@
 .parking-grid {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-start;
+  margin: auto;
   gap: var(--aisle-gap);
-  width: var(--grid-w);  
-  height: var(--grid-h);    
+  width: max-content;
+  height: max-content;
   background-color: var(--c-bg);
   padding: 1.5rem;
 }
