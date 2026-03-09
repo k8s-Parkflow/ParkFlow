@@ -36,8 +36,6 @@
   --aisle-gap: 16px;
   --slots-in-col-cnt: 10;
   --aisles-cnt: 5;
-  --grid-w: calc(var(--aisle-w) * var(--aisles-cnt) + var(--aisle-gap) * (var(--aisles-cnt)-1));
-  --grid-h: calc(var(--slot-h) * var(slots-in-col-cnt) + 4px * (var(slots-in-col-cnt)-1) + 8px);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -62,7 +60,7 @@ input  { font-family: inherit; }
 }
 
 .app__inner {
-  max-width: var(--max-width);
+  max-width: max-content;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
