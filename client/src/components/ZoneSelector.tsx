@@ -1,5 +1,5 @@
 import "../styles/ZoneSelector.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TOTAL_ZONES } from "../utils/parkingUtils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -10,6 +10,10 @@ interface ZoneSelectorProps {
 
 export function ZoneSelector({ selectedZoneId, onZoneChange }: ZoneSelectorProps) {
   const [inputValue, setInputValue] = useState(selectedZoneId.toString());
+  useEffect(() => {
+    setInputValue(selectedZoneId.toString());
+  }, [selectedZoneId]);
+
   const handlePrevious = () => {
     if (selectedZoneId > 1) onZoneChange(selectedZoneId - 1);
   };
