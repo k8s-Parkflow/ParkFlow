@@ -57,25 +57,29 @@ spec:
 
         stage('Update Manifest') {
             steps {
-                // 이 단계는 Git이 설치된 기본 에이전트 컨테이너에서 실행됩니다.
                 script {
-                    // 1. 배포 전용 레포지토리 클론
-                    git credentialsId: 'github-token', 
-                        url: 'https://github.com/k8s-Parkflow/Deploy.git'
-                        branch: 'main'
+                    // 1. 혹시 남아있을지 모르는 옛날 상자(폴더)를 치웁니다.
+                    sh "rm -rf deploy-repo"
                     
-                    // 2. YAML 파일 내 이미지 태그를 현재 빌드 번호(v숫자)로 업데이트
-                    // 파일 경로(frontend/...)가 실제 배포 레포 구조와 맞는지 확인 필수!
-                    sh "sed -i 's|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:v${env.BUILD_NUMBER}|g' frontend/deployment.yaml"
-                    
-                    // 3. 변경 사항을 커밋하고 푸시 (신분증 설정 포함)
-                    sh """
-                        git config user.email "jenkins-bot@parkflow.local"
-                        git config user.name "Jenkins-CI-Bot"
-                        git add .
-                        git commit -m "Deploy: frontend v${env.BUILD_NUMBER} [skip ci]" || echo "No changes to commit"
-                        git push origin main
-                    """
+                    // 2. 'deploy-repo'라는 새 상자 안에서만 작업을 합니다.
+                    dir('deploy-repo') {
+                        // 3. 깃허브 주소와 'main' 브랜치를 정확히 지정합니다.
+                        git credentialsId: 'github-token', 
+                            url: 'https://github.com/k8s-Parkflow/Deploy.git',
+                            branch: 'main' // 👈 여기가 포인트입니다!
+                        
+                        // 4. YAML 파일 수정 (경로: frontend/deployment.yaml)
+                        sh "sed -i 's|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:v${env.BUILD_NUMBER}|g' frontend/deployment.yaml"
+                        
+                        // 5. 변경 사항 푸시 (신분증 설정 포함)
+                        sh """
+                            git config user.email "jenkins-bot@parkflow.local"
+                            git config user.name "Jenkins-CI-Bot"
+                            git add .
+                            git commit -m "Deploy: frontend v${env.BUILD_NUMBER} [skip ci]" || echo "No changes to commit"
+                            git push origin main
+                        """
+                    }
                 }
             }
         }
