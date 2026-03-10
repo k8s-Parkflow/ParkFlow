@@ -48,7 +48,7 @@ spec:
                     /kaniko/executor \
                       --context "${env.WORKSPACE}" \
                       --dockerfile Dockerfile \
-                      --destination ${DOCKER_IMAGE}:${env.BUILD_NUMBER} \
+                      --destination ${DOCKER_IMAGE}:v${env.BUILD_NUMBER} \
                       --destination ${DOCKER_IMAGE}:latest
                     """
                 }
