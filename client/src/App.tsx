@@ -35,10 +35,10 @@ export default function App() {
         <header className="app__header">
           <div className="app__brand">
             <div className="app__brand-icon">
-              <ParkingSquare size={32} />
+              <img src="/src/parkflow-logo.png" alt="Logo" />
             </div>
             <div>
-              <h1 className="app__title">ParkFlow</h1>
+              <h1 className="app__title">park<span className="app__title-highlight">f</span>low</h1>
               <p className="app__subtitle">실시간 주차 관리 시스템</p>
             </div>
           </div>
