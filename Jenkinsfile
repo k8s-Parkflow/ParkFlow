@@ -62,6 +62,7 @@ spec:
                     // 1. 배포 전용 레포지토리 클론
                     git credentialsId: 'github-token', 
                         url: 'https://github.com/k8s-Parkflow/Deploy.git'
+                        branch: 'main'
                     
                     // 2. YAML 파일 내 이미지 태그를 현재 빌드 번호(v숫자)로 업데이트
                     // 파일 경로(frontend/...)가 실제 배포 레포 구조와 맞는지 확인 필수!
