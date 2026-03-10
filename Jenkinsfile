@@ -60,8 +60,9 @@ spec:
                 script {
                     sh "rm -rf deploy-repo"
                     
-                    // 1. github-token을 변수(GIT_TOKEN)로 가져옵니다.
-                    withCredentials([string(credentialsId: 'github-token', variable: 'GIT_TOKEN')]) {
+                    // 1. Username with password 형식에 맞게 불러옵니다.
+                    // GIT_TOKEN 변수에 Jihwan님의 GitHub PAT(Password)가 담깁니다.
+                    withCredentials([usernamePassword(credentialsId: 'github-token', passwordVariable: 'GIT_TOKEN', usernameVariable: 'GIT_USER')]) {
                         dir('deploy-repo') {
                             git credentialsId: 'github-token', 
                                 url: 'https://github.com/k8s-Parkflow/Deploy.git',
@@ -73,11 +74,11 @@ spec:
                                 git config user.email "jenkins-bot@parkflow.local"
                                 git config user.name "Jenkins-CI-Bot"
                                 git add .
-                                # 변경사항이 있을 때만 커밋
+                                # 변경사항 확인 후 커밋
                                 git diff --quiet && git diff --staged --quiet || git commit -m "Deploy: frontend v${env.BUILD_NUMBER} [skip ci]"
                                 
-                                # 2. 인증 토큰을 포함하여 URL을 재설정하고 푸시합니다.
-                                git remote set-url origin https://x-access-token:${GIT_TOKEN}@github.com/k8s-Parkflow/Deploy.git
+                                # 2. 인증 정보를 포함하여 URL 재설정 후 푸시
+                                git remote set-url origin https://${GIT_USER}:${GIT_TOKEN}@github.com/k8s-Parkflow/Deploy.git
                                 git push origin main
                             """
                         }
