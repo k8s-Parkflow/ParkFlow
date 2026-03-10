@@ -1,7 +1,7 @@
 pipeline {
     agent {
         kubernetes {
-            // Kaniko 실행을 위한 포드 템플릿 정의
+            // Kaniko 빌드를 위한 전용 포드 템플릿
             yaml """
 apiVersion: v1
 kind: Pod
@@ -19,7 +19,7 @@ spec:
   volumes:
   - name: kaniko-secret
     secret:
-      secretName: dockerhub-secret # 미리 생성한 K8s Secret 이름
+      secretName: dockerhub-secret
       items:
         - key: .dockerconfigjson
           path: config.json
@@ -28,14 +28,14 @@ spec:
     }
 
     environment {
-        // 본인의 Docker Hub ID와 레포지토리 이름으로 수정하세요
-        DOCKER_IMAGE = "doctor1006@naver.com/parkflow_front" 
-        TAG = "${env.BUILD_NUMBER}"
+        // 도커 허브 사용자 이름과 이미지 이름을 설정합니다.
+        DOCKER_IMAGE = "hyungdongjo/parkflow_front"
     }
 
     stages {
         stage('Checkout') {
             steps {
+                // GitHub에서 최신 소스 코드를 가져옵니다.
                 checkout scm
             }
         }
@@ -43,11 +43,12 @@ spec:
         stage('Build and Push Image') {
             steps {
                 container('kaniko') {
+                    // 공백이 없더라도 안전을 위해 WORKSPACE 경로를 따옴표로 감쌌습니다.
                     sh """
                     /kaniko/executor \
-                      --context `pwd` \
+                      --context "${env.WORKSPACE}" \
                       --dockerfile Dockerfile \
-                      --destination ${DOCKER_IMAGE}:${TAG} \
+                      --destination ${DOCKER_IMAGE}:${env.BUILD_NUMBER} \
                       --destination ${DOCKER_IMAGE}:latest
                     """
                 }
