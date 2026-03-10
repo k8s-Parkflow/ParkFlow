@@ -58,27 +58,29 @@ spec:
         stage('Update Manifest') {
             steps {
                 script {
-                    // 1. 혹시 남아있을지 모르는 옛날 상자(폴더)를 치웁니다.
                     sh "rm -rf deploy-repo"
                     
-                    // 2. 'deploy-repo'라는 새 상자 안에서만 작업을 합니다.
-                    dir('deploy-repo') {
-                        // 3. 깃허브 주소와 'main' 브랜치를 정확히 지정합니다.
-                        git credentialsId: 'github-token', 
-                            url: 'https://github.com/k8s-Parkflow/Deploy.git',
-                            branch: 'main' // 👈 여기가 포인트입니다!
-                        
-                        // 4. YAML 파일 수정 (경로: frontend/deployment.yaml)
-                        sh "sed -i 's|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:v${env.BUILD_NUMBER}|g' frontend/deployment.yaml"
-                        
-                        // 5. 변경 사항 푸시 (신분증 설정 포함)
-                        sh """
-                            git config user.email "jenkins-bot@parkflow.local"
-                            git config user.name "Jenkins-CI-Bot"
-                            git add .
-                            git commit -m "Deploy: frontend v${env.BUILD_NUMBER} [skip ci]" || echo "No changes to commit"
-                            git push origin main
-                        """
+                    // 1. github-token을 변수(GIT_TOKEN)로 가져옵니다.
+                    withCredentials([string(credentialsId: 'github-token', variable: 'GIT_TOKEN')]) {
+                        dir('deploy-repo') {
+                            git credentialsId: 'github-token', 
+                                url: 'https://github.com/k8s-Parkflow/Deploy.git',
+                                branch: 'main'
+                            
+                            sh "sed -i 's|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:v${env.BUILD_NUMBER}|g' frontend/deployment.yaml"
+                            
+                            sh """
+                                git config user.email "jenkins-bot@parkflow.local"
+                                git config user.name "Jenkins-CI-Bot"
+                                git add .
+                                # 변경사항이 있을 때만 커밋
+                                git diff --quiet && git diff --staged --quiet || git commit -m "Deploy: frontend v${env.BUILD_NUMBER} [skip ci]"
+                                
+                                # 2. 인증 토큰을 포함하여 URL을 재설정하고 푸시합니다.
+                                git remote set-url origin https://x-access-token:${GIT_TOKEN}@github.com/k8s-Parkflow/Deploy.git
+                                git push origin main
+                            """
+                        }
                     }
                 }
             }
