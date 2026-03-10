@@ -29,7 +29,7 @@ spec:
 
     environment {
         // 도커 허브 사용자 이름과 이미지 이름을 설정합니다.
-        DOCKER_IMAGE = "hyungdongjo/parkflow_front"
+        DOCKER_IMAGE = "hyungdongjo/parking_frontend"
     }
 
     stages {
