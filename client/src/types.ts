@@ -1,56 +1,67 @@
 export interface Zone {
-  zone_id: number;
-  zone_name: string;
-}
-
-//Parking slot default
-export interface BaseSlot {
-  slot_id: number;
-  zone_id: number;
-  slot_type_id: number;
-  slot_code: string;
-  is_active: boolean;
-}
-
-export interface SlotOccupancy {
-  slot_id: number;
-  occupied: boolean;
-  vehicle_plate?: string;
-}
-
-// Updated Slot interface used throughout the front
-export type SlotType = "standard" | "EV" | "handicapped";
-
-export interface ParkingSlotData {
-  slotId: number;
-  slotCode: string;
   zoneId: number;
-  slotType: SlotType;
+  zoneName: string;
+}
+
+export interface ParkingSlot {
+  slotId: number;
+  slotName: string;
+  category: SlotType;
   isActive: boolean;
-  licensePlate?: string;
+  licensePlate: string | null;
+}
+
+export type SlotType = "GENERAL" | "EV" | "DISABLED";
+
+export const SLOT_TYPE_MAP: Record<number, SlotType> = {
+  0: "GENERAL",
+  1: "EV",
+  2: "DISABLED",
+};
+
+export interface GlobalStats {
+  totalCount: number;
+  generalCount: number;
+  evCount: number;
+  disabledCount: number;
+
+  totalAvailable: number;
+  generalAvailable: number;
+  evAvailable: number;
+  disabledAvailable: number;
 }
 
 export interface ZoneAvailabilityResponse {
   zone_id: number;
-  total_slots: number;
-  occupied_slots: number;
-  available_slots: number;
-  general_total: number;
-  general_occupied: number;
-  general_available: number;
-  ev_total: number;
-  ev_occupied: number;
-  ev_available: number;
-  disabled_total: number;
-  disabled_occupied: number;
-  disabled_available: number;
+  slot_type: SlotType;
+  total_count: number;
+  occupied_count: number;
+  available_count: number;
+  updated_at: Date;
 }
 
-export interface TypeAvailabilityResponse {
+export interface CurrentParkingViewResponse {
+  vehicle_num: string;
+  history_id: number;
   zone_id: number;
-  type: string;
-  total: number;
-  occupied: number;
-  available: number;
+  slot_id: number;
+  entry_code: string;
+  zone_name: string;
+  slot_name: string;
+  slot_type: SlotType;
+  entry_at: Date;
+  updated_at: Date;
 }
 
+export interface SlotData {
+  slot_id: number;
+  slot_name: string;
+  category: SlotType;
+  is_active: boolean;
+  license_plate: string | null;
+}
+
+export interface ZoneSlotsResponse {
+  zone_id: number;
+  slots: SlotData[];
+}
