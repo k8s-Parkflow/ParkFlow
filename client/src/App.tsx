@@ -1,6 +1,6 @@
 import { ParkingSquare, Activity } from 'lucide-react';
 import './styles/global.css';
-import logo from "../../assets/logo.png";
+import logo from "./assets/logo.png";
 
 import { getParkingData } from './hooks/getParkingData';
 import { useSearch } from "./hooks/useSearch";
