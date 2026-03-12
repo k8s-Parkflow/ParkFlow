@@ -4,51 +4,79 @@
  */
 
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
-import type { Zone, ParkingSlot, GlobalStats, CurrentParkingViewResponse, ZoneAvailabilityResponse, ZoneSlotsResponse } from "../types.ts";
+import type { Zone, ParkingSlot, SlotData, Availability } from "../types.ts";
 import { TOTAL_ZONES } from "../App.tsx";
 
 const REFRESH_INTERVAL_MS = 5_000;
-const EVENTS_PER_TICK = () => Math.floor(Math.random() * 4) + 2;
 
-export function calcGlobalStats(allZoneStats: ZoneAvailabilityResponse[]): GlobalStats {
-  const sums = allZoneStats.reduce(
-    (acc, z) => {
-      if (z.slot_type === "GENERAL") {
-        acc.generalCount += z.total_count;
-        acc.generalAvailable += z.available_count;
-      }
-      else if (z.slot_type === "EV") {
-        acc.evCount += z.total_count;
-        acc.evAvailable += z.available_count;
-      } 
-      else if (z.slot_type === "DISABLED") {
-        acc.disabledCount += z.total_count;
-        acc.disabledAvailable += z.available_count;
-      }
-      return acc;
-    },
-    {
-      generalCount: 0,
-      evCount: 0,
-      disabledCount: 0,
-      generalAvailable: 0,
-      evAvailable: 0,
-      disabledAvailable: 0,
-    }
-  );
+// POSSIBLE ISSUE: zoneId may not align with db
+function buildZones(total: number): Zone[] {
+  return Array.from({ length: total }, (_, i) => ({
+    zoneId: i + 1,
+    zoneName: `${i + 1}`,
+  }));
+}
+
+function mapToParkingSlot(s: SlotData): ParkingSlot {
+  return {
+    slotId:       s.slot_id,
+    slotName:     s.slot_name,
+    category:     s.category,
+    isActive:     s.is_active,
+    licensePlate: s.license_plate,
+  };
+}
+
+// GET /api/parking/availability/
+// returns { slot_type?: SlotType, availableCount: number }
+async function fetchTypedAvailability(slotType: string = ""): Promise<number> {
+  const url = `/api/parking/availability/${slotType ? `?slot_type=${slotType}` : ""}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Fetch failed for ${slotType || "TOTAL"}`);
+  const data = await res.json();
+  return data.availableCount;
+}
+
+// get ZoneSlotsResponse for all zones
+async function fetchGlobalAvailability(): Promise<Availability> {
+  const [
+    totalAvailable,
+    generalAvailable,
+    evAvailable,
+    disabledAvailable,
+  ] = await Promise.all([
+    fetchTypedAvailability(),
+    fetchTypedAvailability("GENERAL"),
+    fetchTypedAvailability("EV"),
+    fetchTypedAvailability("DISABLED"),
+  ]);
 
   return {
-    ...sums,
-    totalCount: sums.generalCount + sums.evCount + sums.disabledCount,
-    totalAvailable: sums.generalAvailable + sums.evAvailable + sums.disabledAvailable,
+    totalCount: 0,
+    generalCount: 0,
+    evCount: 0,
+    disabledCount: 0,
+
+    totalAvailable,
+    generalAvailable,
+    evAvailable,
+    disabledAvailable,
   };
+}
+
+// GET zones/<zone_id>/slots/
+// Returns ZoneSlotsResponse { zone_id: number, slots: SlotData[] }
+async function fetchZoneSlots(zoneId: number): Promise<SlotData[]> {
+  const res = await fetch(`/zones/${zoneId}/slots/`);
+  if (!res.ok) throw new Error(`zone slots fetch failed: ${res.status}`);
+  const data = await res.json();
+  return data.slots;
 }
 
 interface GetParkingDataReturn {
   zones: Zone[];
   zoneSlots: ParkingSlot[];
-  zoneStats: ZoneAvailabilityResponse;
-  globalStats: GlobalStats;
+  globalStats: Availability;
   lastUpdated: Date;
   autoRefresh: boolean;
   toggleAutoRefresh: () => void;
@@ -59,48 +87,86 @@ interface GetParkingDataReturn {
 }
 
 export function getParkingData(): GetParkingDataReturn {
-  const [zoneSlots, setZoneSlots] = useState<ZoneSlotsResponse>();
-  const [zoneStats, setZoneStats] = useState<ZoneAvailabilityResponse>();
-  const [globalStats, setGlobalStats] = useState<ZoneAvailabilityResponse[]>([]);
-  const [selectedZoneId, setSelectedZoneId] = useState(1);
-  const [lastUpdated,    setLastUpdated]    = useState(new Date());
-  const [autoRefresh,    setAutoRefresh]    = useState(true);
-  const [isLoading,      setIsLoading]      = useState(true);
+  const zones = useMemo(() => buildZones(TOTAL_ZONES), []);
+  
+  const [globalStats, setGlobalStats] =
+    useState<Availability>({
+      totalCount: 0,
+      generalCount: 0,
+      evCount: 0,
+      disabledCount: 0,
+
+      totalAvailable: 0,
+      generalAvailable: 0,
+      evAvailable: 0,
+      disabledAvailable: 0,
+    });
+
+  // All SlotData for currently selected zone
+  const [allZoneSlots, setAllZoneSlots] = useState<SlotData[]>([]);
+  const [selectedZoneId, setSelectedZoneId] = useState<number>(1);
+  const [lastUpdated,    setLastUpdated]    = useState<Date>(new Date());
+  const [autoRefresh,    setAutoRefresh]    = useState<boolean>(true);
+  const [isLoading,      setIsLoading]      = useState<boolean>(true);
   const [error,          setError]          = useState<string | null>(null);
 
-  const fetchData = useCallback(async () => {
+  const selectedZoneIdRef = useRef(selectedZoneId);
+  useEffect(() => { selectedZoneIdRef.current = selectedZoneId; }, [selectedZoneId]);
+
+  const fetchAll = useCallback(async (zoneId: number) => {
     try {
-      const data = await fetch("/api/parking/availability/all").then((res) => res.json());
-      setGlobalStats(data);
+      const [availability, slots] = await Promise.all([
+        fetchGlobalAvailability(),
+        fetchZoneSlots(zoneId),
+      ]);
+      setGlobalStats(availability);
+      setAllZoneSlots(slots);
       setLastUpdated(new Date());
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to fetch zone availability");
-    } finally {
-      setIsLoading(false);
+      setError(err instanceof Error ? err.message : "Failed to fetch parking data");
     }
   }, []);
 
-  useEffect(() => { fetchData(); }, [fetchData]);
+  // initial load
+  useEffect(() => {
+    setIsLoading(true);
+    fetchAll(selectedZoneId).finally(() => setIsLoading(false));
+  }, []);
 
+  // poll every 5 s
   useEffect(() => {
     if (!autoRefresh) return;
-    const id = setInterval(fetchData, REFRESH_INTERVAL_MS);
+    const id = setInterval(
+      () => fetchAll(selectedZoneIdRef.current),
+      REFRESH_INTERVAL_MS
+    );
     return () => clearInterval(id);
-  }, [autoRefresh, fetchData]);
+  }, [autoRefresh, fetchAll]);
 
-  // real-time updates
+  // when zone change
+  const handleSetSelectedZoneId = useCallback(
+    (id: number) => {
+      setSelectedZoneId(id);
+      fetchAll(id);
+    },
+    [fetchAll]
+  );
+
+  // convert SlotData to ParkingSlot
+  const zoneSlots = useMemo<ParkingSlot[]>(() => {
+    return allZoneSlots.map(mapToParkingSlot);
+  }, [allZoneSlots]);
 
   return {
-    zones: ,
+    zones,
     zoneSlots,
-    zoneStats,
     globalStats,
     lastUpdated,
     autoRefresh,
     toggleAutoRefresh: () => setAutoRefresh((v) => !v),
     selectedZoneId,
-    setSelectedZoneId,
+    setSelectedZoneId: handleSetSelectedZoneId,
     isLoading,
     error,
   };

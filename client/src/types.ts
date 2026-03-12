@@ -19,7 +19,7 @@ export const SLOT_TYPE_MAP: Record<number, SlotType> = {
   2: "DISABLED",
 };
 
-export interface GlobalStats {
+export interface Availability {
   totalCount: number;
   generalCount: number;
   evCount: number;
@@ -31,13 +31,18 @@ export interface GlobalStats {
   disabledAvailable: number;
 }
 
-export interface ZoneAvailabilityResponse {
-  zone_id: number;
-  slot_type: SlotType;
-  total_count: number;
-  occupied_count: number;
-  available_count: number;
-  updated_at: Date;
+// export interface ZoneAvailabilityResponse {
+//   zone_id: number;
+//   slot_type: SlotType;
+//   total_count: number;
+//   occupied_count: number;
+//   available_count: number;
+//   updated_at: Date;
+// }
+
+export interface AvailabilityResponse {
+  slotType?: SlotType;
+  availableCount: number;
 }
 
 export interface CurrentParkingViewResponse {
@@ -61,7 +66,7 @@ export interface SlotData {
   license_plate: string | null;
 }
 
-export interface ZoneSlotsResponse {
-  zone_id: number;
-  slots: SlotData[];
-}
+// export interface ZoneSlotsResponse {
+//   zone_id: number;
+//   slots: SlotData[];
+// }
