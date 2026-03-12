@@ -5,16 +5,15 @@ import "../styles/ParkingSlot.css";
 interface ParkingSlotProps {
   slotNumber: string;
   isActive: boolean;
-  zone: string;
+  licensePlate: string | null;
   slotType?: SlotType;
-  licensePlate?: string;
   isHighlighted?: boolean;
   orientation?: "left" | "right";
 }
 
 function getSlotClassNames( isActive: boolean, slotType: SlotType, isHighlighted: boolean ): string {
   const classes = ["parking-slot"];
-  if (slotType === "handicapped") classes.push("parking-slot--handicapped");
+  if (slotType === "DISABLED") classes.push("parking-slot--handicapped");
   if (slotType === "EV") classes.push("parking-slot--ev");
   if (isHighlighted) classes.push("parking-slot--highlighted");
   else if (isActive) classes.push("parking-slot--occupied");
@@ -23,12 +22,12 @@ function getSlotClassNames( isActive: boolean, slotType: SlotType, isHighlighted
 }
 
 function SlotBadge({ slotType }: { slotType: SlotType }) {
-  if (slotType === "standard") return null;
+  if (slotType === "GENERAL") return null;
 
   return (
     <div className="parking-slot__badge">
       {slotType === "EV" && <Zap className="parking-slot__badge-icon parking-slot__badge-icon--ev" size={12} />}
-      {slotType === "handicapped" && (
+      {slotType === "DISABLED" && (
         <Accessibility className="parking-slot__badge-icon parking-slot__badge-icon--handicapped" size={12} />
       )}
     </div>
@@ -54,8 +53,7 @@ function SlotIcon({isActive, orientation, isHighlighted}: {
 export function ParkingSlot({
   slotNumber,
   isActive,
-  zone,
-  slotType = "standard",
+  slotType = "GENERAL",
   licensePlate,
   isHighlighted = false,
   orientation = "left",
@@ -64,7 +62,7 @@ export function ParkingSlot({
   const containerClass = getSlotClassNames(isActive, slotType, isHighlighted);
   const statusLabel = isActive ? "occupied" : "available";
   return (
-    <div className={containerClass} aria-label={`Slot ${slotNumber}, Zone ${zone}, ${statusLabel}`}>
+    <div className={containerClass} aria-label={`Slot ${slotNumber}, ${statusLabel}`}>
       <SlotBadge slotType={slotType} />
       <SlotIcon
         isActive={isActive}

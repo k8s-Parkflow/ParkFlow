@@ -1,5 +1,5 @@
 import { ParkingSlot } from "./ParkingSlot";
-import { ParkingSlotData } from "../types.ts";
+import type { Slot } from "../types.ts";
 import "../styles/ParkingGrid.css";
 
 const AISLES_COUNT = 5;
@@ -7,42 +7,41 @@ const SLOTS_PER_AISLE = 20;
 const SLOTS_PER_SIDE = SLOTS_PER_AISLE / 2;
 
 interface ParkingGridProps {
-  slots: ParkingSlotData[]; 
-  highlightedSlotId?: string;
+  slots: Slot[]; 
+  highlightedSlotId: number | null;
   zoomLevel: number;
 }
 
 interface AisleProps {
-  aisleSlots: ParkingSlotData[];
-  highlightedSlotId?: string;
+  aisleSlots: Slot[];
+  highlightedSlotId: number | null;
 }
 
 //aisle: 1-2 columns of parking spaces
 //lane: 주행도로 / 빈 공간
 
-function groupIntoAisles(slots: ParkingSlotData[]): ParkingSlotData[][] {
+function groupIntoAisles(slots: Slot[]): Slot[][] {
   return Array.from({ length: AISLES_COUNT }, (_, i) => 
   slots.slice(i * SLOTS_PER_AISLE, (i+1) * SLOTS_PER_AISLE));
 }
 
 function SlotColumn({ slots, orientation, highlightedSlotId,
 }: {
-  slots: ParkingSlotData[];
+  slots: Slot[];
   orientation: "left" | "right";
-  highlightedSlotId?: string;
+  highlightedSlotId: number | null;
 }) {
   return (
     <div className="parking-grid__column">
       {slots.map((slot) => (
         <ParkingSlot 
           key={slot.slotId}
-          slotNumber={slot.slotCode}
+          slotNumber={slot.slotName}
           isActive={slot.isActive}
-          zone={String(slot.zoneId)}
-          slotType={slot.slotType}
+          slotType={slot.category}
           licensePlate={slot.licensePlate}
           orientation={orientation}
-          isHighlighted={slot.slotCode === highlightedSlotId}/>
+          isHighlighted={slot.slotId === highlightedSlotId}/>
       ))}
     </div>
   )

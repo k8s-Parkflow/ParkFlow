@@ -3,7 +3,7 @@ export interface Zone {
   zoneName: string;
 }
 
-export interface ParkingSlot {
+export interface Slot {
   slotId: number;
   slotName: string;
   category: SlotType;

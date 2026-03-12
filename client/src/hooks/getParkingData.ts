@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
-import type { Zone, ParkingSlot, SlotData, Availability } from "../types.ts";
+import type { Zone, Slot, SlotData, Availability } from "../types.ts";
 import { TOTAL_ZONES } from "../App.tsx";
 
 const REFRESH_INTERVAL_MS = 5_000;
@@ -17,7 +17,7 @@ function buildZones(total: number): Zone[] {
   }));
 }
 
-function mapToParkingSlot(s: SlotData): ParkingSlot {
+function mapToSlot(s: SlotData): Slot {
   return {
     slotId:       s.slot_id,
     slotName:     s.slot_name,
@@ -75,7 +75,7 @@ async function fetchZoneSlots(zoneId: number): Promise<SlotData[]> {
 
 interface GetParkingDataReturn {
   zones: Zone[];
-  zoneSlots: ParkingSlot[];
+  zoneSlots: Slot[];
   globalStats: Availability;
   lastUpdated: Date;
   autoRefresh: boolean;
@@ -154,8 +154,8 @@ export function getParkingData(): GetParkingDataReturn {
   );
 
   // convert SlotData to ParkingSlot
-  const zoneSlots = useMemo<ParkingSlot[]>(() => {
-    return allZoneSlots.map(mapToParkingSlot);
+  const zoneSlots = useMemo<Slot[]>(() => {
+    return allZoneSlots.map(mapToSlot);
   }, [allZoneSlots]);
 
   return {

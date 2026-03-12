@@ -1,12 +1,12 @@
 import { CheckCircle, Zap, Accessibility } from "lucide-react";
 import { StatPanel }   from "./StatPanel";
 import { SearchPanel } from "./SearchPanel";
-import type { GlobalStats } from "../../utils/parkingUtils";
+import type { Availability } from "../../types"; 
 import type { SearchError } from "../../hooks/useSearch";
 import "../../styles/StatDisplay.css";
 
 interface StatDisplayProps {
-  globalStats:   GlobalStats;
+  globalStats:   Availability;
   searchQuery:   string;
   isValidPlate: boolean,
   searchError: SearchError;
@@ -15,7 +15,7 @@ interface StatDisplayProps {
 }
 
 export function StatDisplay({ globalStats, searchQuery, isValidPlate, searchError, onSearchChange, onSearch }: StatDisplayProps) {
-  const { generalAvailable, generalTotal, disabledAvailable, disabledTotal, evAvailable, evTotal } = globalStats;
+  const { generalAvailable, generalCount, disabledAvailable, disabledCount, evAvailable, evCount } = globalStats;
 
   return (
     <section className="stats-row">
@@ -23,9 +23,9 @@ export function StatDisplay({ globalStats, searchQuery, isValidPlate, searchErro
         category="hero"
         label="일반 주차석"
         value={generalAvailable}
-        total={generalTotal}
-        fillPct={(generalAvailable / generalTotal) * 100}
-        sub={`전체 일반 주차석의 ${((generalAvailable / (generalTotal || 1)) * 100).toFixed(0)}% 여유`}
+        total={generalCount}
+        fillPct={(generalAvailable / generalCount) * 100}
+        sub={`전체 일반 주차석의 ${((generalAvailable / (generalCount || 1)) * 100).toFixed(0)}% 여유`}
         icon={CheckCircle}
         iconClass="stat-panel__icon--hero"
       />
@@ -34,7 +34,7 @@ export function StatDisplay({ globalStats, searchQuery, isValidPlate, searchErro
         category="handicapped"
         label="장애인 주차석"
         value={disabledAvailable}
-        total={disabledTotal}
+        total={disabledCount}
         sub="Available"
         icon={Accessibility}
         iconClass="stat-panel__icon--blue"
@@ -44,7 +44,7 @@ export function StatDisplay({ globalStats, searchQuery, isValidPlate, searchErro
         category="EV"
         label="EV 충전석"
         value={evAvailable}
-        total={evTotal}
+        total={evCount}
         sub="Available"
         icon={Zap}
         iconClass="stat-panel__icon--purple"

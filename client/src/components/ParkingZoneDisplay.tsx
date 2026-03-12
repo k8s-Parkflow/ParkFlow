@@ -1,6 +1,6 @@
 import { ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
 import { ParkingGrid } from "./ParkingGrid";
-import type { Zone, ZoneAvailabilityResponse, ParkingSlotData } from "../types.ts";
+import type { Zone, Slot } from "../types.ts";
 import { ZoneSelector } from "./ZoneSelector.tsx";
 import "../styles/ParkingZoneDisplay.css";
 
@@ -8,9 +8,8 @@ interface ParkingZoneDisplayProps {
   selectedZoneId: number;
   onZoneChange: (id: number) => void;
   zone: Zone;
-  zoneStats: ZoneAvailabilityResponse;
-  zoneSlots: ParkingSlotData[];
-  highlightedSlotId: string;
+  zoneSlots: Slot[];
+  highlightedSlotId: number | null;
   zoomLevel: number;
   onZoomIn: () => void;
   onZoomOut: () => void;
@@ -24,7 +23,6 @@ export function ParkingZoneDisplay({
   selectedZoneId,
   onZoneChange,
   zone,
-  zoneStats,
   zoneSlots,
   highlightedSlotId,
   zoomLevel,
@@ -36,15 +34,15 @@ export function ParkingZoneDisplay({
     <section className="zone-display">
       <div className="zone-display__header">
         <div className="zone-display__group">
-          <span className="zone-badge">{zone.zone_id}</span>
+          <span className="zone-badge">{zone.zoneId}</span>
           <div>
-            <h2 className="zone-display__title">{zone.zone_name}</h2>
-            <p className="zone-display__sub">
+            <h2 className="zone-display__title">{zone.zoneName}</h2>
+            {/* <p className="zone-display__sub">
               {zoneStats.available_slots} 여유 / {zoneStats.total_slots} 전체
               &nbsp;·&nbsp; 일반 {zoneStats.general_available}/{zoneStats.general_total}
               &nbsp;·&nbsp; EV {zoneStats.ev_available}/{zoneStats.ev_total}
               &nbsp;·&nbsp; 장애인 {zoneStats.disabled_available}/{zoneStats.disabled_total}
-            </p>
+            </p> */}
           </div>
         </div>
 

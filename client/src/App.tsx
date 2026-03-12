@@ -15,23 +15,31 @@ export const SLOTS_PER_ZONE = 100;
 export default function App() {
   const {
     zones,
-    allSlots,
     zoneSlots,
-    zoneStats,
     globalStats,
     lastUpdated,
     autoRefresh,
     toggleAutoRefresh,
     selectedZoneId,
     setSelectedZoneId,
+    isLoading, 
+    error
   } = getParkingData();
 
 
   const { searchQuery, setSearchQuery, isValidPlate, searchError, highlightedSlotId, handleSearch } = useSearch();
   const { zoomLevel, zoomIn, zoomOut, zoomReset } = useZoom();
   
-  const selectedZone = zones.find((z) => z.zone_id === selectedZoneId);
+  const selectedZone = zones.find((z) => z.zoneId === selectedZoneId);
 
+  if (isLoading) {
+    return <div>Loading parking data...</div>;
+  }
+
+  if (error) {
+    return <div>Failed to load: {error}</div>;
+  }
+  
   return (
     <div className="app">
       <div className="app__inner">
@@ -69,7 +77,7 @@ export default function App() {
           isValidPlate={isValidPlate}
           searchError={searchError}
           onSearchChange={setSearchQuery}
-          onSearch={()=> handleSearch(allSlots, setSelectedZoneId)}
+          onSearch={()=> handleSearch(setSelectedZoneId)}
         />
 
         {/* Parking Zone Grid Display */}
@@ -78,7 +86,6 @@ export default function App() {
             selectedZoneId={selectedZoneId}
             onZoneChange={setSelectedZoneId}
             zone={selectedZone}
-            zoneStats={zoneStats}
             zoneSlots={zoneSlots}
             highlightedSlotId={highlightedSlotId}
             zoomLevel={zoomLevel}

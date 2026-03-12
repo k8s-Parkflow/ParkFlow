@@ -1,20 +1,17 @@
-/*
-    parked car location search
- */
-
 import { useState, useCallback } from "react";
-import type { ParkingSlotData } from "../types.ts";
 
 const PLATE_REGEX = /^\d{2,3}[가-힣]\s?\d{4}$/;
+
 export type SearchError = "invalid_format" | "not_found" | null;
 
 export interface UseSearchReturn {
   searchQuery: string;
   setSearchQuery: (q: string) => void;
-  isValidPlate: boolean;           // live format check!
+  isValidPlate: boolean;
   searchError: SearchError;
-  highlightedSlotId: string;
-  handleSearch: (allSlots: ParkingSlotData[], onFound: (zoneId: number) => void) => void;
+  highlightedSlotId: number | null;
+
+  handleSearch: (onFound: (zoneId: number) => void) => Promise<void>;
 }
 
 function normalisePlate(p: string): string {
@@ -24,46 +21,46 @@ function normalisePlate(p: string): string {
 export function useSearch(): UseSearchReturn {
   const [searchQuery, setSearchQueryBase] = useState("");
   const [searchError, setSearchError] = useState<SearchError>(null);
-  const [highlightedSlotId, setHighlightedSlotId] = useState("");
-  
+  const [highlightedSlotId, setHighlightedSlotId] = useState<number | null>(null);
+
   const isValidPlate = PLATE_REGEX.test(searchQuery.trim());
-  
+
   const setSearchQuery = useCallback((q: string) => {
     setSearchQueryBase(q);
     setSearchError(null);
-    setHighlightedSlotId("");
+    setHighlightedSlotId(null);
   }, []);
 
-  const handleSearch = useCallback(
-    (allSlots: ParkingSlotData[], onFound: (zoneId: number) => void) => {
-
-      if (!isValidPlate) {
-        setSearchError("invalid_format");
-        return;
-      }
-
-      const normQ = normalisePlate(searchQuery);
-      const found = allSlots.find(
-        (s) => s.licensePlate && normalisePlate(s.licensePlate) === normQ
-      );
-
-      if (!found) {
+  const handleSearch = useCallback(async (onFound: (zoneId: number) => void) => {
+    if (!isValidPlate) {
+      setSearchError("invalid_format");
+      return;
+    }
+    const normQ = normalisePlate(searchQuery);
+    try {
+      const res = await fetch(`/api/parking/current/${encodeURIComponent(normQ)}`);
+      if (res.status === 404) {
         setSearchError("not_found");
         return;
       }
-
+      if (!res.ok) {
+        throw new Error("Search request failed");
+      }
+      const data = await res.json();
       setSearchError(null);
-      onFound(found.zoneId);
-      setHighlightedSlotId(found.slotCode);
-    },
-    [searchQuery]
-  );
+      onFound(data.zone_id);
+      setHighlightedSlotId(data.slot_id);
+    } catch {
+      setSearchError("not_found");
+    }
+  }, [searchQuery, isValidPlate]);
 
-  // const clearSearch = useCallback(() => {
-  //   setSearchQueryBase("");
-  //   setSearchError(null);
-  //   setHighlightedSlotId("");
-  // }, []);
-
-  return { searchQuery, setSearchQuery, isValidPlate, searchError, highlightedSlotId, handleSearch };
+  return {
+    searchQuery,
+    setSearchQuery,
+    isValidPlate,
+    searchError,
+    highlightedSlotId,
+    handleSearch,
+  };
 }
