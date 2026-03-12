@@ -1,5 +1,6 @@
 import { ParkingSquare, Activity } from 'lucide-react';
 import './styles/global.css';
+import logo from "../../assets/logo.png";
 
 import { getParkingData } from './hooks/getParkingData';
 import { useSearch } from "./hooks/useSearch";
@@ -7,6 +8,9 @@ import { useZoom } from "./hooks/useZoom";
 
 import { StatDisplay } from './components/Dashboard/StatDisplay';
 import { ParkingZoneDisplay } from "./components/ParkingZoneDisplay";
+
+export const TOTAL_ZONES = 100;
+export const SLOTS_PER_ZONE = 100;
 
 export default function App() {
   const {
@@ -22,6 +26,7 @@ export default function App() {
     setSelectedZoneId,
   } = getParkingData();
 
+
   const { searchQuery, setSearchQuery, isValidPlate, searchError, highlightedSlotId, handleSearch } = useSearch();
   const { zoomLevel, zoomIn, zoomOut, zoomReset } = useZoom();
   
@@ -35,7 +40,7 @@ export default function App() {
         <header className="app__header">
           <div className="app__brand">
             <div className="app__brand-icon">
-              <img src="/src/parkflow-logo.png" alt="Logo" />
+              <img src={logo} alt="Logo" />
             </div>
             <div>
               <h1 className="app__title">park<span className="app__title-highlight">f</span>low</h1>
