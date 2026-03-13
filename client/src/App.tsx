@@ -18,6 +18,7 @@ export default function App() {
   const {
     zones,
     zoneSlots,
+    zoneStats,
     globalStats,
     lastUpdated,
     autoRefresh,
@@ -101,6 +102,7 @@ export default function App() {
             onZoneChange={setSelectedZoneId}
             zone={selectedZone}
             zoneSlots={zoneSlots}
+            zoneStats={zoneStats}
             highlightedSlotId={highlightedSlotId}
             zoomLevel={zoomLevel}
             onZoomIn={zoomIn}

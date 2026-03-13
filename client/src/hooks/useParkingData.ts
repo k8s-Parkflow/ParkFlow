@@ -22,6 +22,44 @@ function mapToSlot(s: SlotData): Slot {
   };
 }
 
+// derive zoneStats from slotdata per zone
+function computeZoneStats(slots: SlotData[]): Availability {
+  let totalAvailable = 0, generalAvailable = 0, evAvailable = 0, disabledAvailable = 0;
+  let generalCount   = 0, evCount          = 0, disabledCount = 0;
+
+  for (const slot of slots) {
+    const available = !slot.is_active;
+
+    switch (slot.category) {
+      case "GENERAL":
+        generalCount++;
+        if (available) generalAvailable++;
+        break;
+      case "EV":
+        evCount++;
+        if (available) evAvailable++;
+        break;
+      case "DISABLED":
+        disabledCount++;
+        if (available) disabledAvailable++;
+        break;
+    }
+
+    if (available) totalAvailable++;
+  }
+
+  return {
+    totalCount: slots.length,
+    generalCount,
+    evCount,
+    disabledCount,
+    totalAvailable,
+    generalAvailable,
+    evAvailable,
+    disabledAvailable,
+  };
+}
+
 // GET /api/parking/availability/
 // returns { slot_type?: SlotType, availableCount: number }
 async function fetchTypedAvailability(slotType = "", signal?: AbortSignal): Promise<number> {
@@ -64,6 +102,7 @@ async function fetchZoneSlots(zoneId: number, signal?: AbortSignal): Promise<Slo
 interface UseParkingDataReturn {
   zones: Zone[];
   zoneSlots: Slot[];
+  zoneStats: Availability;
   globalStats: Availability;
   lastUpdated: Date;
   autoRefresh: boolean;
@@ -82,7 +121,6 @@ const EMPTY_AVAILABILITY: Availability = {
 // renamed from getParkingData
 export function useParkingData(): UseParkingDataReturn {
   const zones = useMemo(() => buildZones(TOTAL_ZONES), []);
-
   const [globalStats,    setGlobalStats]    = useState<Availability>(EMPTY_AVAILABILITY);
   const [allZoneSlots,   setAllZoneSlots]   = useState<SlotData[]>([]);
   const [selectedZoneId, setSelectedZoneId] = useState(1);
@@ -134,10 +172,12 @@ export function useParkingData(): UseParkingDataReturn {
   }, [fetchAll]);
 
   const zoneSlots = useMemo(() => allZoneSlots.map(mapToSlot), [allZoneSlots]);
-
+  const zoneStats = useMemo(() => computeZoneStats(allZoneSlots), [allZoneSlots]);
+  
   return {
     zones,
     zoneSlots,
+    zoneStats,
     globalStats,
     lastUpdated,
     autoRefresh,
