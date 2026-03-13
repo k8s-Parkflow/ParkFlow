@@ -9,7 +9,7 @@ export interface UseSearchReturn {
   setSearchQuery: (q: string) => void;
   isValidPlate: boolean;
   searchError: SearchError;
-  highlightedSlotId: number | null;
+  highlightedSlotName: string | null;
 
   handleSearch: (onFound: (zoneId: number) => void) => Promise<void>;
 }
@@ -21,14 +21,14 @@ function normalisePlate(p: string): string {
 export function useSearch(): UseSearchReturn {
   const [searchQuery, setSearchQueryBase] = useState("");
   const [searchError, setSearchError] = useState<SearchError>(null);
-  const [highlightedSlotId, setHighlightedSlotId] = useState<number | null>(null);
+  const [highlightedSlotName, setHighlightedSlotName] = useState<string | null>(null);
 
   const isValidPlate = PLATE_REGEX.test(searchQuery.trim());
 
   const setSearchQuery = useCallback((q: string) => {
     setSearchQueryBase(q);
     setSearchError(null);
-    setHighlightedSlotId(null);
+    setHighlightedSlotName(null);
   }, []);
 
   const handleSearch = useCallback(async (onFound: (zoneId: number) => void) => {
@@ -49,7 +49,7 @@ export function useSearch(): UseSearchReturn {
       const data = await res.json();
       setSearchError(null);
       onFound(data.zone_name);
-      setHighlightedSlotId(data.slot_name);
+      setHighlightedSlotName(data.slot_name);
     } catch {
       setSearchError("not_found");
     }
@@ -60,7 +60,7 @@ export function useSearch(): UseSearchReturn {
     setSearchQuery,
     isValidPlate,
     searchError,
-    highlightedSlotId,
+    highlightedSlotName,
     handleSearch,
   };
 }

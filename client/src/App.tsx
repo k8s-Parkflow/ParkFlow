@@ -30,7 +30,7 @@ export default function App() {
   } = useParkingData();
 
 
-  const { searchQuery, setSearchQuery, isValidPlate, searchError, highlightedSlotId, handleSearch } = useSearch();
+  const { searchQuery, setSearchQuery, isValidPlate, searchError, highlightedSlotName, handleSearch } = useSearch();
   const { zoomLevel, zoomIn, zoomOut, zoomReset } = useZoom();
   
   const selectedZone = zones.find((z) => z.zoneId === selectedZoneId);
@@ -103,7 +103,7 @@ export default function App() {
             zone={selectedZone}
             zoneSlots={zoneSlots}
             zoneStats={zoneStats}
-            highlightedSlotId={highlightedSlotId}
+            highlightedSlotName={highlightedSlotName}
             zoomLevel={zoomLevel}
             onZoomIn={zoomIn}
             onZoomOut={zoomOut}

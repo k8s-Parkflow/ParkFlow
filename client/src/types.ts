@@ -45,19 +45,6 @@ export interface AvailabilityResponse {
   availableCount: number;
 }
 
-export interface CurrentParkingViewResponse {
-  vehicle_num: string;
-  history_id: number;
-  zone_id: number;
-  slot_id: number;
-  entry_code: string;
-  zone_name: string;
-  slot_name: string;
-  slot_type: SlotType;
-  entry_at: Date;
-  updated_at: Date;
-}
-
 export interface SlotData {
   slotId: number;
   slot_name: string;

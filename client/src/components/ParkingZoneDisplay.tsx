@@ -10,7 +10,7 @@ interface ParkingZoneDisplayProps {
   zone: Zone;
   zoneSlots: Slot[];
   zoneStats: Availability;
-  highlightedSlotId: number | null;
+  highlightedSlotName: string | null;
   zoomLevel: number;
   onZoomIn: () => void;
   onZoomOut: () => void;
@@ -26,7 +26,7 @@ export function ParkingZoneDisplay({
   zone,
   zoneSlots,
   zoneStats,
-  highlightedSlotId,
+  highlightedSlotName,
   zoomLevel,
   onZoomIn,
   onZoomOut,
@@ -76,7 +76,7 @@ export function ParkingZoneDisplay({
       >
         <ParkingGrid
           slots={zoneSlots}
-          highlightedSlotId={highlightedSlotId}
+          highlightedSlotName={highlightedSlotName}
           zoomLevel={zoomLevel}
         />
       </div>

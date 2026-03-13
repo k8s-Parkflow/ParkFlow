@@ -3,7 +3,7 @@ import type { SlotType } from "../types.ts";
 import "../styles/ParkingSlot.css";
 
 interface ParkingSlotProps {
-  slotNumber: string;
+  slotName: string;
   isActive: boolean;
   licensePlate: string | null;
   slotType?: SlotType;
@@ -51,7 +51,7 @@ function SlotIcon({isActive, orientation, isHighlighted}: {
 }
 
 export function ParkingSlot({
-  slotNumber,
+  slotName,
   isActive,
   slotType = "GENERAL",
   licensePlate,
@@ -62,14 +62,14 @@ export function ParkingSlot({
   const containerClass = getSlotClassNames(isActive, slotType, isHighlighted);
   const statusLabel = isActive ? "occupied" : "available";
   return (
-    <div className={containerClass} aria-label={`Slot ${slotNumber}, ${statusLabel}`}>
+    <div className={containerClass} aria-label={`Slot ${slotName}, ${statusLabel}`}>
       <SlotBadge slotType={slotType} />
       <SlotIcon
         isActive={isActive}
         orientation={orientation}
         isHighlighted={isHighlighted}
       />
-      <span className="parking-slot__number">{slotNumber}</span>
+      <span className="parking-slot__number">{slotName}</span>
       {licensePlate && isActive && (
         <span className="parking-slot__plate">
           {licensePlate}
