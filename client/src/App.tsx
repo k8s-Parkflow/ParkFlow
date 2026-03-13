@@ -2,7 +2,7 @@ import { ParkingSquare, Activity } from 'lucide-react';
 import './styles/global.css';
 import logo from "./assets/logo.png";
 
-import { getParkingData } from './hooks/getParkingData';
+import { useParkingData } from './hooks/useParkingData';
 import { useSearch } from "./hooks/useSearch";
 import { useZoom } from "./hooks/useZoom";
 
@@ -10,6 +10,8 @@ import { StatDisplay } from './components/Dashboard/StatDisplay';
 import { ParkingZoneDisplay } from "./components/ParkingZoneDisplay";
 
 export const TOTAL_ZONES = 100;
+export const EV_PER_ZONE = 5;
+export const DISABLED_PER_ZONE = 5;
 export const SLOTS_PER_ZONE = 100;
 
 export default function App() {
@@ -24,7 +26,7 @@ export default function App() {
     setSelectedZoneId,
     isLoading, 
     error
-  } = getParkingData();
+  } = useParkingData();
 
 
   const { searchQuery, setSearchQuery, isValidPlate, searchError, highlightedSlotId, handleSearch } = useSearch();
@@ -33,11 +35,23 @@ export default function App() {
   const selectedZone = zones.find((z) => z.zoneId === selectedZoneId);
 
   if (isLoading) {
-    return <div>Loading parking data...</div>;
+    return (
+      <div className="app">
+        <div className="app__inner">
+          <div>Loading parking data...</div>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div>Failed to load: {error}</div>;
+    return (
+      <div className="app">
+        <div className="app__inner">
+          <div>Failed to load: {error}</div>
+        </div>
+      </div>
+    );
   }
   
   return (
