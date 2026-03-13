@@ -59,11 +59,11 @@ export interface CurrentParkingViewResponse {
 }
 
 export interface SlotData {
-  slot_id: number;
+  slotId: number;
   slot_name: string;
   category: SlotType;
-  is_active: boolean;
-  license_plate: string | null;
+  isActive: boolean;
+  vehicleNum: string | null;
 }
 
 // export interface ZoneSlotsResponse {

@@ -48,8 +48,8 @@ export function useSearch(): UseSearchReturn {
       }
       const data = await res.json();
       setSearchError(null);
-      onFound(data.zone_id);
-      setHighlightedSlotId(data.slot_id);
+      onFound(data.zone_name);
+      setHighlightedSlotId(data.slot_name);
     } catch {
       setSearchError("not_found");
     }

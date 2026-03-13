@@ -14,11 +14,11 @@ function buildZones(total: number): Zone[] {
 
 function mapToSlot(s: SlotData): Slot {
   return {
-    slotId:       s.slot_id,
+    slotId:       s.slotId,
     slotName:     s.slot_name,
     category:     s.category,
-    isActive:     s.is_active,
-    licensePlate: s.license_plate,
+    isActive:     s.isActive,
+    licensePlate: s.vehicleNum,
   };
 }
 
@@ -28,7 +28,7 @@ function computeZoneStats(slots: SlotData[]): Availability {
   let generalCount   = 0, evCount          = 0, disabledCount = 0;
 
   for (const slot of slots) {
-    const available = !slot.is_active;
+    const available = !slot.isActive;
 
     switch (slot.category) {
       case "GENERAL":
@@ -61,9 +61,9 @@ function computeZoneStats(slots: SlotData[]): Availability {
 }
 
 // GET /api/parking/availability/
-// returns { slot_type?: SlotType, availableCount: number }
+// returns { slotType?: SlotType, availableCount: number }
 async function fetchTypedAvailability(slotType = "", signal?: AbortSignal): Promise<number> {
-  const url = `/api/parking/availability/${slotType ? `?slot_type=${slotType}` : ""}`;
+  const url = `/api/parking/availability${slotType ? `?slot_type=${slotType}` : ""}`;
   const res = await fetch(url, { signal });
   if (!res.ok) throw new Error(`Fetch failed for ${slotType || "TOTAL"}`);
   return (await res.json()).availableCount;
@@ -94,7 +94,7 @@ async function fetchGlobalAvailability(signal?: AbortSignal): Promise<Availabili
 // GET zones/<zone_id>/slots/
 // Returns ZoneSlotsResponse { zone_id: number, slots: SlotData[] }
 async function fetchZoneSlots(zoneId: number, signal?: AbortSignal): Promise<SlotData[]> {
-  const res = await fetch(`/zones/${zoneId}/slots/`, { signal });
+  const res = await fetch(`/zones/${zoneId}/slots`, { signal });
   if (!res.ok) throw new Error(`Zone slots fetch failed: ${res.status}`);
   return (await res.json()).slots;
 }
